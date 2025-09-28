@@ -1,0 +1,29 @@
+/* App Component Styles */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+}
+
+main {
+  flex: 1;
+  padding: var(--spacing-xl);
+  margin-left: 280px; 
+  transition: margin-left var(--transition-normal);
+  /* padding-top: 90px;  */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  main {
+    margin-left: 0;
+    padding: var(--spacing-md);
+    padding-top: 80px;
+  }
+}
+

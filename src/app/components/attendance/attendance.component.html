@@ -1,0 +1,243 @@
+<div class="attendance">
+  <!-- Header Section -->
+  <div class="attendance-header">
+    <div class="header-content">
+        <h1 class="page-title">
+          Attendance Analytics
+        </h1>
+        <p class="page-subtitle">Track and analyze your attendance rate</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary">
+        Request Leave
+      </button>
+    </div>
+  </div>
+
+  <!-- Overview Stats -->
+  <div class="overview-stats">
+    <div class="stat-card primary">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ attendanceStats.totalPresent }}</div>
+        <div class="stat-label">Classes Attended</div>
+        <div class="stat-change positive">+{{ attendanceStats.presentChange }} from last month</div>
+      </div>
+    </div>
+    
+    <div class="stat-card warning">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">schedule</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ attendanceStats.lateCount }}</div>
+        <div class="stat-label">Late Arrivals</div>
+        <div class="stat-change negative">+{{ attendanceStats.lateChange }} from last month</div>
+      </div>
+    </div>
+    
+    <div class="stat-card info">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">assignment</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ attendanceStats.leaveCount }}</div>
+        <div class="stat-label">Leave Requests</div>
+        <div class="stat-change neutral">Approved</div>
+      </div>
+    </div>
+    
+    <div class="stat-card error">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">cancel</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ attendanceStats.absentCount }}</div>
+        <div class="stat-label">Absences</div>
+        <div class="stat-change negative">Need improvement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attendance Rate -->
+  <div class="attendance-rate-card">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Overall Attendance Rate
+        </h3>
+        <div class="rate-period">
+        <button class="btn btn-secondary btn-sm" 
+                [class.active]="selectedPeriod === 'month'"
+                (click)="setPeriod('month')">Month</button>
+        <button class="btn btn-secondary btn-sm"
+                [class.active]="selectedPeriod === 'semester'"
+                (click)="setPeriod('semester')">Semester</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="rate-display">
+          <div class="rate-circle">
+            <div class="rate-percentage">{{ attendanceStats.overallRate }}%</div>
+            <div class="rate-label">Attendance</div>
+          </div>
+          <div class="rate-details">
+            <div class="rate-item">
+              <span class="rate-text">Total Classes:</span>
+              <span class="rate-value">{{ attendanceStats.totalClasses }}</span>
+            </div>
+            <div class="rate-item">
+              <span class="rate-text">Present:</span>
+              <span class="rate-value success">{{ attendanceStats.totalPresent }}</span>
+            </div>
+            <div class="rate-item">
+              <span class="rate-text">Absent:</span>
+              <span class="rate-value error">{{ attendanceStats.absentCount }}</span>
+            </div>
+            <div class="rate-item">
+              <span class="rate-text">Late:</span>
+              <span class="rate-value warning">{{ attendanceStats.lateCount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly Chart -->
+  <div class="monthly-chart">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Monthly Attendance Chart
+        </h3>
+        <div class="chart-controls">
+          <button class="btn btn-secondary btn-sm" (click)="previousMonth()">←</button>
+          <span class="current-month">{{ currentMonth }}</span>
+          <button class="btn btn-secondary btn-sm" (click)="nextMonth()">→</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <div class="chart-bars">
+            <div class="chart-bar" 
+                 *ngFor="let week of weeklyData"
+                 [style.height]="getBarHeight(week.rate)">
+              <div class="bar-value">{{ week.rate }}%</div>
+              <div class="bar-label">Tuần {{ week.week }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subject-wise Attendance -->
+  <div class="subject-attendance">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">
+            <span class="material-symbols-outlined">school</span>
+          </span>
+          Điểm danh theo môn học
+        </h3>
+        <a href="#" class="card-link">Xem chi tiết</a>
+      </div>
+      <div class="card-body">
+        <div class="subject-list">
+          <div class="subject-item" *ngFor="let subject of subjectAttendance">
+            <div class="subject-info">
+              <div class="subject-name">{{ subject.name }}</div>
+              <div class="subject-teacher">{{ subject.teacher }}</div>
+            </div>
+            <div class="subject-stats">
+              <div class="subject-rate">{{ subject.rate }}%</div>
+              <div class="subject-progress">
+                <div class="progress-bar" [style.width]="subject.rate + '%'"></div>
+              </div>
+            </div>
+            <div class="subject-status" [class]="getStatusClass(subject.rate)">
+              {{ getStatusTextByRate(subject.rate) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Attendance -->
+  <div class="recent-attendance">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">
+            <span class="material-symbols-outlined">event</span>
+          </span>
+          Lịch sử điểm danh gần đây
+        </h3>
+        <a href="#" class="card-link">Xem tất cả</a>
+      </div>
+      <div class="card-body">
+        <div class="attendance-history">
+          <div class="history-item" *ngFor="let record of recentAttendance">
+            <div class="history-date">
+              <div class="date-day">{{ record.date | date:'dd' }}</div>
+              <div class="date-month">{{ record.date | date:'MMM' }}</div>
+            </div>
+            <div class="history-content">
+              <div class="history-subject">{{ record.subject }}</div>
+              <div class="history-time">{{ record.time }}</div>
+              <div class="history-room">{{ record.room }}</div>
+            </div>
+            <div class="history-status" [class]="'status-' + record.status">
+              <span class="status-icon">{{ getStatusIcon(record.status) }}</span>
+              <span class="status-text">{{ getStatusText(record.status) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Students -->
+  <div class="top-students">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">
+            <span class="material-symbols-outlined">emoji_events</span>
+          </span>
+          Sinh viên có điểm danh tốt nhất
+        </h3>
+        <a href="#" class="card-link">Xem bảng xếp hạng</a>
+      </div>
+      <div class="card-body">
+        <div class="students-table">
+          <div class="table-header">
+            <div class="col-rank">#</div>
+            <div class="col-name">Tên</div>
+            <div class="col-id">MSSV</div>
+            <div class="col-rate">Tỷ lệ</div>
+            <div class="col-progress">Tiến độ</div>
+          </div>
+          <div class="table-body">
+            <div class="table-row" *ngFor="let student of topStudents; let i = index">
+              <div class="col-rank">
+                <span class="rank-badge" [class]="'rank-' + (i + 1)">{{ i + 1 }}</span>
+              </div>
+              <div class="col-name">{{ student.name }}</div>
+              <div class="col-id">{{ student.id }}</div>
+              <div class="col-rate">{{ student.rate }}%</div>
+              <div class="col-progress">
+                <div class="progress-bar" [style.width]="student.rate + '%'"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

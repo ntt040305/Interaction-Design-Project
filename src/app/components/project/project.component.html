@@ -1,0 +1,232 @@
+<div class="project">
+  <!-- Header Section -->
+  <div class="project-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <span class="icon">
+          <span class="material-symbols-outlined">work</span>
+        </span>
+        Quản lý dự án
+      </h1>
+      <p class="page-subtitle">Theo dõi và quản lý các dự án học tập của bạn</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary">
+        <span class="icon">
+          <span class="material-symbols-outlined">add</span>
+        </span>
+        Tạo dự án mới
+      </button>
+    </div>
+  </div>
+
+  <!-- Project Stats -->
+  <div class="project-stats">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ projectStats.completed }}</div>
+        <div class="stat-label">Dự án hoàn thành</div>
+        <div class="stat-change positive">+{{ projectStats.completedThisMonth }} tháng này</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">schedule</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ projectStats.inProgress }}</div>
+        <div class="stat-label">Đang thực hiện</div>
+        <div class="stat-change warning">Cần theo dõi</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">assignment</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ projectStats.pending }}</div>
+        <div class="stat-label">Chờ bắt đầu</div>
+        <div class="stat-change neutral">Sắp tới</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">analytics</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ projectStats.completionRate }}%</div>
+        <div class="stat-label">Tỷ lệ hoàn thành</div>
+        <div class="stat-change positive">+{{ projectStats.improvement }}% so với kỳ trước</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Projects -->
+  <div class="current-projects">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">🚀</span>
+          Dự án đang thực hiện
+        </h3>
+        <a href="#" class="card-link">Xem tất cả</a>
+      </div>
+      <div class="card-body">
+        <div class="projects-grid">
+          <div class="project-card" *ngFor="let project of currentProjects">
+            <div class="project-header">
+              <div class="project-title">{{ project.title }}</div>
+              <div class="project-status" [class]="'status-' + project.status">
+                {{ getStatusText(project.status) }}
+              </div>
+            </div>
+            <div class="project-description">{{ project.description }}</div>
+            <div class="project-meta">
+              <div class="project-subject">{{ project.subject }}</div>
+              <div class="project-deadline">Hạn: {{ project.deadline | date:'dd/MM/yyyy' }}</div>
+            </div>
+            <div class="project-progress">
+              <div class="progress-header">
+                <span class="progress-label">Tiến độ</span>
+                <span class="progress-percentage">{{ project.progress }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width]="project.progress + '%'"></div>
+              </div>
+            </div>
+            <div class="project-tasks">
+              <div class="task-summary">
+                <span class="completed-tasks">{{ project.completedTasks }}/{{ project.totalTasks }} nhiệm vụ</span>
+              </div>
+            </div>
+            <div class="project-actions">
+              <button class="btn btn-secondary btn-sm">Chi tiết</button>
+              <button class="btn btn-primary btn-sm">Cập nhật</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Timeline -->
+  <div class="project-timeline">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">📅</span>
+          Lịch trình dự án
+        </h3>
+        <div class="timeline-controls">
+          <button class="btn btn-secondary btn-sm" (click)="previousMonth()">←</button>
+          <span class="current-month">{{ currentMonth }}</span>
+          <button class="btn btn-secondary btn-sm" (click)="nextMonth()">→</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="timeline-container">
+          <div class="timeline-item" *ngFor="let milestone of projectMilestones">
+            <div class="timeline-date">
+              <div class="date-day">{{ milestone.date | date:'dd' }}</div>
+              <div class="date-month">{{ milestone.date | date:'MMM' }}</div>
+            </div>
+            <div class="timeline-content">
+              <div class="milestone-title">{{ milestone.title }}</div>
+              <div class="milestone-project">{{ milestone.project }}</div>
+              <div class="milestone-description">{{ milestone.description }}</div>
+            </div>
+            <div class="timeline-status" [class]="'status-' + milestone.status">
+              {{ getStatusText(milestone.status) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Collaboration -->
+  <div class="team-collaboration">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">👥</span>
+          Cộng tác nhóm
+        </h3>
+        <a href="#" class="card-link">Quản lý nhóm</a>
+      </div>
+      <div class="card-body">
+        <div class="team-stats">
+          <div class="team-stat">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+              <div class="stat-value">{{ teamStats.totalMembers }}</div>
+              <div class="stat-label">Thành viên</div>
+            </div>
+          </div>
+          <div class="team-stat">
+            <div class="stat-icon">💬</div>
+            <div class="stat-content">
+              <div class="stat-value">{{ teamStats.activeDiscussions }}</div>
+              <div class="stat-label">Thảo luận</div>
+            </div>
+          </div>
+          <div class="team-stat">
+            <div class="stat-icon">📝</div>
+            <div class="stat-content">
+              <div class="stat-value">{{ teamStats.sharedDocuments }}</div>
+              <div class="stat-label">Tài liệu</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="team-members">
+          <div class="member-item" *ngFor="let member of teamMembers">
+            <div class="member-avatar">
+              <span class="avatar-text">{{ member.name.charAt(0) }}</span>
+            </div>
+            <div class="member-info">
+              <div class="member-name">{{ member.name }}</div>
+              <div class="member-role">{{ member.role }}</div>
+            </div>
+            <div class="member-status" [class]="'status-' + member.status">
+              {{ getStatusText(member.status) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activities -->
+  <div class="recent-activities">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">🕒</span>
+          Hoạt động gần đây
+        </h3>
+        <a href="#" class="card-link">Xem tất cả</a>
+      </div>
+      <div class="card-body">
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-icon" [class]="'icon-' + activity.type">
+              {{ getActivityIcon(activity.type) }}
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">{{ activity.title }}</div>
+              <div class="activity-time">{{ getTimeAgo(activity.date) }}</div>
+            </div>
+            <div class="activity-project">{{ activity.project }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

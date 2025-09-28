@@ -1,0 +1,127 @@
+<div class="timetable">
+  <!-- Header Section -->
+  <div class="timetable-header">
+    <div class="header-content">
+        <h1 class="page-title">
+          Study Timetable
+        </h1>
+        <p class="page-subtitle">Manage your class schedule and events</p>
+    </div>
+    <div class="header-actions">
+      <div class="date-navigation">
+        <button class="btn btn-secondary" (click)="previousWeek()">
+          ←
+        </button>
+        <span class="current-week">{{ currentWeekRange }}</span>
+        <button class="btn btn-secondary" (click)="nextWeek()">
+          →
+        </button>
+      </div>
+      <button class="btn btn-primary">
+        Add Event
+      </button>
+    </div>
+  </div>
+
+  <!-- Week View -->
+  <div class="week-view">
+    <div class="time-column">
+        <div class="time-header">Time</div>
+      <div class="time-slots">
+        <div class="time-slot" *ngFor="let time of timeSlots">{{ time }}</div>
+      </div>
+    </div>
+    
+    <div class="days-grid">
+      <div class="day-column" *ngFor="let day of weekDays; let i = index">
+        <div class="day-header">
+          <div class="day-name">{{ day.name }}</div>
+          <div class="day-date">{{ day.date }}</div>
+        </div>
+        <div class="day-content">
+          <div class="class-slot" 
+               *ngFor="let slot of getClassesForDay(day.name)"
+               [class]="'class-' + slot.type"
+               [style.top]="getSlotPosition(slot.startTime)"
+               [style.height]="getSlotHeight(slot.startTime, slot.endTime)">
+            <div class="class-subject">{{ slot.subject }}</div>
+            <div class="class-room">{{ slot.room }}</div>
+            <div class="class-time">{{ slot.startTime }} - {{ slot.endTime }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Schedule -->
+  <div class="today-schedule">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">📚</span>
+          Lịch học hôm nay - {{ today | date:'dd/MM/yyyy' }}
+        </h3>
+        <span class="card-badge">{{ getTodayClasses().length }} môn</span>
+      </div>
+      <div class="card-body">
+        <div class="schedule-list" *ngIf="getTodayClasses().length > 0; else noClasses">
+          <div class="schedule-item" 
+               *ngFor="let classItem of getTodayClasses()"
+               [class.active]="isClassActive(classItem)"
+               [class.upcoming]="isClassUpcoming(classItem)">
+            <div class="schedule-time">
+              <span class="time-start">{{ classItem.startTime }}</span>
+              <span class="time-end">{{ classItem.endTime }}</span>
+            </div>
+            <div class="schedule-content">
+              <div class="schedule-subject">{{ classItem.subject }}</div>
+              <div class="schedule-room">{{ classItem.room }}</div>
+              <div class="schedule-teacher">{{ classItem.teacher }}</div>
+            </div>
+            <div class="schedule-status">
+              <span *ngIf="isClassActive(classItem)" class="status-badge active">In Progress</span>
+              <span *ngIf="isClassUpcoming(classItem)" class="status-badge upcoming">Upcoming</span>
+              <span *ngIf="!isClassActive(classItem) && !isClassUpcoming(classItem)" class="status-badge completed">Completed</span>
+            </div>
+          </div>
+        </div>
+        <ng-template #noClasses>
+          <div class="no-classes">
+            <div class="no-classes-text">No classes today!</div>
+            <div class="no-classes-subtext">Take time to study or rest.</div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Events -->
+  <div class="upcoming-events">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Upcoming Events
+        </h3>
+        <a href="#" class="card-link">View All</a>
+      </div>
+      <div class="card-body">
+        <div class="events-list">
+          <div class="event-item" *ngFor="let event of upcomingEvents">
+            <div class="event-date">
+              <div class="event-day">{{ event.date | date:'dd' }}</div>
+              <div class="event-month">{{ event.date | date:'MMM' }}</div>
+            </div>
+            <div class="event-content">
+              <div class="event-title">{{ event.title }}</div>
+              <div class="event-time">{{ event.time }}</div>
+              <div class="event-location">{{ event.location }}</div>
+            </div>
+            <div class="event-type" [class]="'type-' + event.type">
+              {{ event.type }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

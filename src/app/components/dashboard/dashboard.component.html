@@ -1,0 +1,224 @@
+<div class="dashboard">
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+        <div class="welcome-content">
+          <h1 class="welcome-title">Hello, Toan Thang!</h1>
+          <p class="welcome-subtitle">Welcome back to your learning management system</p>
+        </div>
+        <div class="welcome-actions">
+          <button class="btn btn-primary">
+            View Today's Schedule
+          </button>
+        </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">analytics</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">95%</div>
+        <div class="stat-label">Attendance Rate</div>
+        <div class="stat-change positive">+2% from last month</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">school</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">8</div>
+        <div class="stat-label">Active Courses</div>
+        <div class="stat-change neutral">Current semester</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">work</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Ongoing Projects</div>
+        <div class="stat-change positive">1 new project</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">emoji_events</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">3.8</div>
+        <div class="stat-label">Average Grade</div>
+        <div class="stat-change positive">+0.2 from last semester</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- Today's Schedule -->
+    <div class="card schedule-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Today's Schedule
+        </h3>
+        <span class="card-date">{{ today | date:'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="card-body">
+        <div class="schedule-list">
+          <div class="schedule-item">
+            <div class="schedule-time">08:00 - 09:30</div>
+            <div class="schedule-content">
+              <div class="schedule-subject">Web Programming</div>
+              <div class="schedule-room">Room A101</div>
+            </div>
+            <div class="schedule-status active">In Progress</div>
+          </div>
+          
+          <div class="schedule-item">
+            <div class="schedule-time">10:00 - 11:30</div>
+            <div class="schedule-content">
+              <div class="schedule-subject">Database Systems</div>
+              <div class="schedule-room">Room B205</div>
+            </div>
+            <div class="schedule-status upcoming">Upcoming</div>
+          </div>
+          
+          <div class="schedule-item">
+            <div class="schedule-time">14:00 - 15:30</div>
+            <div class="schedule-content">
+              <div class="schedule-subject">Computer Networks</div>
+              <div class="schedule-room">Room C301</div>
+            </div>
+            <div class="schedule-status upcoming">Upcoming</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="card activities-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Recent Activities
+        </h3>
+        <a href="#" class="card-link">View All</a>
+      </div>
+      <div class="card-body">
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon">
+              <span class="material-symbols-outlined">analytics</span>
+            </div>
+            <div class="activity-content">
+            <div class="activity-title">Submitted Web Programming Assignment</div>
+            <div class="activity-time">2 hours ago</div>
+            </div>
+            <div class="activity-status completed">Completed</div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon">
+              <span class="material-symbols-outlined">school</span>
+            </div>
+            <div class="activity-content">
+            <div class="activity-title">Attended Database Systems Class</div>
+            <div class="activity-time">4 hours ago</div>
+            </div>
+            <div class="activity-status completed">Completed</div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon">
+              <span class="material-symbols-outlined">work</span>
+            </div>
+            <div class="activity-content">
+            <div class="activity-title">Updated Project Progress</div>
+            <div class="activity-time">1 day ago</div>
+            </div>
+            <div class="activity-status pending">Pending</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Deadlines -->
+    <div class="card deadlines-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Upcoming Deadlines
+        </h3>
+        <a href="#" class="card-link">View All</a>
+      </div>
+      <div class="card-body">
+        <div class="deadline-list">
+          <div class="deadline-item urgent">
+            <div class="deadline-date">25/12</div>
+            <div class="deadline-content">
+              <div class="deadline-title">Submit Final Report</div>
+              <div class="deadline-subject">Web Programming</div>
+            </div>
+            <div class="deadline-status urgent">2 days</div>
+          </div>
+          
+          <div class="deadline-item warning">
+            <div class="deadline-date">28/12</div>
+            <div class="deadline-content">
+              <div class="deadline-title">Final Exam</div>
+              <div class="deadline-subject">Database Systems</div>
+            </div>
+            <div class="deadline-status warning">5 days</div>
+          </div>
+          
+          <div class="deadline-item normal">
+            <div class="deadline-date">02/01</div>
+            <div class="deadline-content">
+              <div class="deadline-title">Submit Project</div>
+              <div class="deadline-subject">Computer Networks</div>
+            </div>
+            <div class="deadline-status normal">10 days</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Chart -->
+    <div class="card chart-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Grade Chart
+        </h3>
+        <div class="chart-period">
+          <button class="btn btn-secondary btn-sm">This Month</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-placeholder">
+          <div class="chart-bars">
+            <div class="chart-bar" style="height: 80%">
+              <span class="bar-label">Web Programming</span>
+              <span class="bar-value">8.5</span>
+            </div>
+            <div class="chart-bar" style="height: 70%">
+              <span class="bar-label">Database Systems</span>
+              <span class="bar-value">7.8</span>
+            </div>
+            <div class="chart-bar" style="height: 90%">
+              <span class="bar-label">Computer Networks</span>
+              <span class="bar-value">9.2</span>
+            </div>
+            <div class="chart-bar" style="height: 75%">
+              <span class="bar-label">AI</span>
+              <span class="bar-value">8.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

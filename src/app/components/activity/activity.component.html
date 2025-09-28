@@ -1,0 +1,205 @@
+<div class="activity">
+  <!-- Header Section -->
+  <div class="activity-header">
+    <div class="header-content">
+        <h1 class="page-title">
+          Learning Activities
+        </h1>
+        <p class="page-subtitle">Track and manage your learning activities</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary">
+        Add Activity
+      </button>
+    </div>
+  </div>
+
+  <!-- Activity Filters -->
+  <div class="activity-filters">
+    <div class="filter-group">
+      <label class="filter-label">Filter by type:</label>
+      <div class="filter-buttons">
+        <button class="btn btn-secondary btn-sm" 
+                [class.active]="selectedFilter === 'all'"
+                (click)="setFilter('all')">All</button>
+        <button class="btn btn-secondary btn-sm"
+                [class.active]="selectedFilter === 'class'"
+                (click)="setFilter('class')">Classes</button>
+        <button class="btn btn-secondary btn-sm"
+                [class.active]="selectedFilter === 'assignment'"
+                (click)="setFilter('assignment')">Assignments</button>
+        <button class="btn btn-secondary btn-sm"
+                [class.active]="selectedFilter === 'exam'"
+                (click)="setFilter('exam')">Exams</button>
+        <button class="btn btn-secondary btn-sm"
+                [class.active]="selectedFilter === 'project'"
+                (click)="setFilter('project')">Projects</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Time period:</label>
+      <select class="form-input" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="semester">This Semester</option>
+        <option value="all">All Time</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Activity Stats -->
+  <div class="activity-stats">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">school</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ activityStats.totalActivities }}</div>
+        <div class="stat-label">Total Activities</div>
+        <div class="stat-change positive">+{{ activityStats.thisWeek }} this week</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ activityStats.completed }}</div>
+        <div class="stat-label">Completed</div>
+        <div class="stat-change positive">{{ activityStats.completionRate }}% rate</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">schedule</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ activityStats.pending }}</div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-change warning">Needs attention</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">trending_up</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ activityStats.averageScore }}</div>
+        <div class="stat-label">Average Score</div>
+        <div class="stat-change positive">+{{ activityStats.scoreImprovement }} from last semester</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Timeline -->
+  <div class="activity-timeline">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">
+            <span class="material-symbols-outlined">event</span>
+          </span>
+          Dòng thời gian hoạt động
+        </h3>
+        <div class="timeline-controls">
+          <button class="btn btn-secondary btn-sm" (click)="previousPeriod()">←</button>
+          <span class="current-period">{{ currentPeriod }}</span>
+          <button class="btn btn-secondary btn-sm" (click)="nextPeriod()">→</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="timeline">
+          <div class="timeline-item" 
+               *ngFor="let activity of filteredActivities; let i = index"
+               [class]="'timeline-' + activity.type">
+            <div class="timeline-marker">
+              <span class="marker-icon">
+                <span class="material-symbols-outlined">{{ getActivityIcon(activity.type) }}</span>
+              </span>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <div class="activity-title">{{ activity.title }}</div>
+                <div class="activity-date">{{ activity.date | date:'dd/MM/yyyy HH:mm' }}</div>
+              </div>
+              <div class="activity-description">{{ activity.description }}</div>
+              <div class="activity-meta">
+                <span class="activity-subject">{{ activity.subject }}</span>
+                <span class="activity-status" [class]="'status-' + activity.status">
+                  {{ getStatusText(activity.status) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activities -->
+  <div class="recent-activities">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">
+            <span class="material-symbols-outlined">schedule</span>
+          </span>
+          Hoạt động gần đây
+        </h3>
+        <a href="#" class="card-link">Xem tất cả</a>
+      </div>
+      <div class="card-body">
+        <div class="recent-list">
+          <div class="recent-item" *ngFor="let activity of recentActivities">
+            <div class="recent-icon" [class]="'icon-' + activity.type">
+              <span class="material-symbols-outlined">{{ getActivityIcon(activity.type) }}</span>
+            </div>
+            <div class="recent-content">
+              <div class="recent-title">{{ activity.title }}</div>
+              <div class="recent-time">{{ getTimeAgo(activity.date) }}</div>
+            </div>
+            <div class="recent-status" [class]="'status-' + activity.status">
+              {{ getStatusText(activity.status) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Activities -->
+  <div class="upcoming-activities">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">
+            <span class="material-symbols-outlined">pending</span>
+          </span>
+          Hoạt động sắp tới
+        </h3>
+        <a href="#" class="card-link">Xem lịch</a>
+      </div>
+      <div class="card-body">
+        <div class="upcoming-list">
+          <div class="upcoming-item" *ngFor="let activity of upcomingActivities">
+            <div class="upcoming-date">
+              <div class="date-day">{{ activity.date | date:'dd' }}</div>
+              <div class="date-month">{{ activity.date | date:'MMM' }}</div>
+            </div>
+            <div class="upcoming-content">
+              <div class="upcoming-title">{{ activity.title }}</div>
+              <div class="upcoming-time">{{ activity.date | date:'HH:mm' }}</div>
+              <div class="upcoming-subject">{{ activity.subject }}</div>
+            </div>
+            <div class="upcoming-priority" [class]="'priority-' + activity.priority">
+              {{ getPriorityText(activity.priority) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<header class="header">
+  <div class="header-left">
+        <div class="logo">
+          <span class="logo-text">TimeTableID</span>
+        </div>
+  </div>
+  
+  <div class="header-center">
+    <div class="search-container">
+      <input type="search" placeholder="Search courses, assignments..." class="search-input">
+    </div>
+  </div>
+  
+  <div class="header-right">
+    <div class="header-info">
+      <div class="welcome-text">
+        <span class="greeting">Hello,</span>
+        <span class="student-name">Toan Thang</span>
+      </div>
+      <div class="current-time">
+        <span class="time">{{ currentTime | date:'HH:mm' }}</span>
+        <span class="date">{{ currentTime | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <!-- <button class="action-btn" title="Dark Mode">
+        <span class="icon">🌙</span>
+      </button> -->
+      <button class="action-btn notification-btn" title="Notifications">
+        <span class="notification-badge">3</span>
+      </button>
+      <button class="action-btn profile-btn" title="Profile">
+        <div class="profile-avatar">
+          <span class="avatar-text">TT</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</header>
