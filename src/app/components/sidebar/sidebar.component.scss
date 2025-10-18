@@ -14,8 +14,8 @@
 
 .sidebar-header {
   padding: var(--spacing-lg);
-  border-bottom: 1px solid var(--gray-200);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  // border-bottom: 1px solid var(--gray-200);
+  // background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
 }
 
 .sidebar-logo {
@@ -37,7 +37,7 @@
 
 .sidebar-content {
   flex: 1;
-  padding: var(--spacing-md) 0;
+  // padding: var(--spacing-md) 0;
   overflow-y: auto;
 }
 

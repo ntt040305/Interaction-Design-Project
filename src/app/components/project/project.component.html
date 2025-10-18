@@ -3,19 +3,16 @@
   <div class="project-header">
     <div class="header-content">
       <h1 class="page-title">
-        <span class="icon">
-          <span class="material-symbols-outlined">work</span>
-        </span>
-        Quản lý dự án
+        Project Management
       </h1>
-      <p class="page-subtitle">Theo dõi và quản lý các dự án học tập của bạn</p>
+      <p class="page-subtitle">Track and manage your academic projects</p>
     </div>
     <div class="header-actions">
       <button class="btn btn-primary">
         <span class="icon">
           <span class="material-symbols-outlined">add</span>
         </span>
-        Tạo dự án mới
+        Create New Project
       </button>
     </div>
   </div>
@@ -27,9 +24,9 @@
         <span class="material-symbols-outlined">check_circle</span>
       </div>
       <div class="stat-content">
-        <div class="stat-value">{{ projectStats.completed }}</div>
-        <div class="stat-label">Dự án hoàn thành</div>
-        <div class="stat-change positive">+{{ projectStats.completedThisMonth }} tháng này</div>
+  <div class="stat-value">{{ projectStats.completed }}</div>
+  <div class="stat-label">Completed Projects</div>
+  <div class="stat-change positive">+{{ projectStats.completedThisMonth }} this month</div>
       </div>
     </div>
     
@@ -38,9 +35,9 @@
         <span class="material-symbols-outlined">schedule</span>
       </div>
       <div class="stat-content">
-        <div class="stat-value">{{ projectStats.inProgress }}</div>
-        <div class="stat-label">Đang thực hiện</div>
-        <div class="stat-change warning">Cần theo dõi</div>
+  <div class="stat-value">{{ projectStats.inProgress }}</div>
+  <div class="stat-label">In Progress</div>
+  <div class="stat-change warning">Needs attention</div>
       </div>
     </div>
     
@@ -49,9 +46,9 @@
         <span class="material-symbols-outlined">assignment</span>
       </div>
       <div class="stat-content">
-        <div class="stat-value">{{ projectStats.pending }}</div>
-        <div class="stat-label">Chờ bắt đầu</div>
-        <div class="stat-change neutral">Sắp tới</div>
+  <div class="stat-value">{{ projectStats.pending }}</div>
+  <div class="stat-label">Pending</div>
+  <div class="stat-change neutral">Upcoming</div>
       </div>
     </div>
     
@@ -60,9 +57,9 @@
         <span class="material-symbols-outlined">analytics</span>
       </div>
       <div class="stat-content">
-        <div class="stat-value">{{ projectStats.completionRate }}%</div>
-        <div class="stat-label">Tỷ lệ hoàn thành</div>
-        <div class="stat-change positive">+{{ projectStats.improvement }}% so với kỳ trước</div>
+  <div class="stat-value">{{ projectStats.completionRate }}%</div>
+  <div class="stat-label">Completion Rate</div>
+  <div class="stat-change positive">+{{ projectStats.improvement }}% vs previous period</div>
       </div>
     </div>
   </div>
@@ -72,10 +69,10 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">
-          <span class="icon">🚀</span>
-          Dự án đang thực hiện
+          <span class="icon"><span class="material-symbols-outlined">rocket_launch</span></span>
+          Current Projects
         </h3>
-        <a href="#" class="card-link">Xem tất cả</a>
+        <a href="#" class="card-link">View all</a>
       </div>
       <div class="card-body">
         <div class="projects-grid">
@@ -86,10 +83,10 @@
                 {{ getStatusText(project.status) }}
               </div>
             </div>
-            <div class="project-description">{{ project.description }}</div>
+              <div class="project-description">{{ project.description }}</div>
             <div class="project-meta">
               <div class="project-subject">{{ project.subject }}</div>
-              <div class="project-deadline">Hạn: {{ project.deadline | date:'dd/MM/yyyy' }}</div>
+              <div class="project-deadline">Deadline: {{ project.deadline | date:'dd/MM/yyyy' }}</div>
             </div>
             <div class="project-progress">
               <div class="progress-header">
@@ -102,12 +99,12 @@
             </div>
             <div class="project-tasks">
               <div class="task-summary">
-                <span class="completed-tasks">{{ project.completedTasks }}/{{ project.totalTasks }} nhiệm vụ</span>
+                <span class="completed-tasks">{{ project.completedTasks }}/{{ project.totalTasks }} tasks</span>
               </div>
             </div>
             <div class="project-actions">
-              <button class="btn btn-secondary btn-sm">Chi tiết</button>
-              <button class="btn btn-primary btn-sm">Cập nhật</button>
+              <button class="btn btn-secondary btn-sm">Details</button>
+              <button class="btn btn-primary btn-sm">Update</button>
             </div>
           </div>
         </div>
@@ -120,10 +117,10 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">
-          <span class="icon">📅</span>
-          Lịch trình dự án
+          <span class="icon"><span class="material-symbols-outlined">calendar_today</span></span>
+          Project Timeline
         </h3>
-        <div class="timeline-controls">
+          <div class="timeline-controls">
           <button class="btn btn-secondary btn-sm" (click)="previousMonth()">←</button>
           <span class="current-month">{{ currentMonth }}</span>
           <button class="btn btn-secondary btn-sm" (click)="nextMonth()">→</button>
@@ -154,33 +151,33 @@
   <div class="team-collaboration">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">
-          <span class="icon">👥</span>
-          Cộng tác nhóm
+          <h3 class="card-title">
+          <span class="icon"><span class="material-symbols-outlined">groups</span></span>
+          Team Collaboration
         </h3>
-        <a href="#" class="card-link">Quản lý nhóm</a>
+        <a href="#" class="card-link">Manage teams</a>
       </div>
       <div class="card-body">
         <div class="team-stats">
           <div class="team-stat">
-            <div class="stat-icon">👥</div>
+            <div class="stat-icon"><span class="material-symbols-outlined">group</span></div>
             <div class="stat-content">
               <div class="stat-value">{{ teamStats.totalMembers }}</div>
-              <div class="stat-label">Thành viên</div>
+              <div class="stat-label">Members</div>
             </div>
           </div>
           <div class="team-stat">
-            <div class="stat-icon">💬</div>
+            <div class="stat-icon"><span class="material-symbols-outlined">chat_bubble</span></div>
             <div class="stat-content">
               <div class="stat-value">{{ teamStats.activeDiscussions }}</div>
-              <div class="stat-label">Thảo luận</div>
+              <div class="stat-label">Discussions</div>
             </div>
           </div>
           <div class="team-stat">
-            <div class="stat-icon">📝</div>
+            <div class="stat-icon"><span class="material-symbols-outlined">description</span></div>
             <div class="stat-content">
               <div class="stat-value">{{ teamStats.sharedDocuments }}</div>
-              <div class="stat-label">Tài liệu</div>
+              <div class="stat-label">Documents</div>
             </div>
           </div>
         </div>
@@ -208,17 +205,17 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">
-          <span class="icon">🕒</span>
-          Hoạt động gần đây
+          <span class="icon"><span class="material-symbols-outlined">access_time</span></span>
+          Recent Activities
         </h3>
-        <a href="#" class="card-link">Xem tất cả</a>
+        <a href="#" class="card-link">View all</a>
       </div>
       <div class="card-body">
         <div class="activity-list">
           <div class="activity-item" *ngFor="let activity of recentActivities">
-            <div class="activity-icon" [class]="'icon-' + activity.type">
-              {{ getActivityIcon(activity.type) }}
-            </div>
+            <!-- <div [class]="'icon-' + activity.type">
+              <span class="material-symbols-outlined activity-icon-symbol">{{ getActivityIcon(activity.type) }}</span>
+            </div> -->
             <div class="activity-content">
               <div class="activity-title">{{ activity.title }}</div>
               <div class="activity-time">{{ getTimeAgo(activity.date) }}</div>

@@ -1,3 +1,4 @@
+
 <div class="timetable">
   <!-- Header Section -->
   <div class="timetable-header">
@@ -27,20 +28,20 @@
   <div class="week-view">
     <div class="time-column">
         <div class="time-header">Time</div>
-      <div class="time-slots">
-        <div class="time-slot" *ngFor="let time of timeSlots">{{ time }}</div>
-      </div>
+  <div class="time-slots">
+  <div class="time-slot" *ngFor="let time of timeSlots">{{ time }}</div>
+  </div>
     </div>
     
     <div class="days-grid">
-      <div class="day-column" *ngFor="let day of weekDays; let i = index">
+  <div class="day-column" *ngFor="let day of weekDays; let i = index">
         <div class="day-header">
           <div class="day-name">{{ day.name }}</div>
           <div class="day-date">{{ day.date }}</div>
         </div>
-        <div class="day-content">
-          <div class="class-slot" 
-               *ngFor="let slot of getClassesForDay(day.name)"
+    <div class="day-content">
+    <div class="class-slot" 
+      *ngFor="let slot of getClassesForDay(day.name)"
                [class]="'class-' + slot.type"
                [style.top]="getSlotPosition(slot.startTime)"
                [style.height]="getSlotHeight(slot.startTime, slot.endTime)">
@@ -63,7 +64,7 @@
         </h3>
         <span class="card-badge">{{ getTodayClasses().length }} môn</span>
       </div>
-      <div class="card-body">
+        <div class="card-body">
         <div class="schedule-list" *ngIf="getTodayClasses().length > 0; else noClasses">
           <div class="schedule-item" 
                *ngFor="let classItem of getTodayClasses()"

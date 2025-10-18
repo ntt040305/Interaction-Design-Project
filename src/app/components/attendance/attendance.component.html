@@ -122,8 +122,8 @@
       <div class="card-body">
         <div class="chart-container">
           <div class="chart-bars">
-            <div class="chart-bar" 
-                 *ngFor="let week of weeklyData"
+      <div class="chart-bar" 
+  *ngFor="let week of weeklyData"
                  [style.height]="getBarHeight(week.rate)">
               <div class="bar-value">{{ week.rate }}%</div>
               <div class="bar-label">Tuần {{ week.week }}</div>

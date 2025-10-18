@@ -192,6 +192,7 @@
 .timeline-controls {
   display: flex;
   align-items: center;
+  margin-top: 0.5rem;
   gap: var(--spacing-md);
 }
 
@@ -257,7 +258,7 @@
 
 .timeline-marker {
   position: absolute;
-  left: -20px;
+  left: -1.875rem;
   top: 0;
   width: 40px;
   height: 40px;
