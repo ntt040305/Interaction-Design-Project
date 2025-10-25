@@ -8,7 +8,8 @@
         <p class="page-subtitle">Track and manage your learning activities</p>
     </div>
     <div class="header-actions">
-      <button class="btn btn-primary">
+      <button *ngIf="isTeacher()" mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
         Add Activity
       </button>
     </div>
@@ -19,31 +20,33 @@
     <div class="filter-group">
       <label class="filter-label">Filter by type:</label>
       <div class="filter-buttons">
-        <button class="btn btn-secondary btn-sm" 
-                [class.active]="selectedFilter === 'all'"
+        <button mat-stroked-button
+                [color]="selectedFilter === 'all' ? 'primary' : ''"
                 (click)="setFilter('all')">All</button>
-        <button class="btn btn-secondary btn-sm"
-                [class.active]="selectedFilter === 'class'"
+        <button mat-stroked-button
+                [color]="selectedFilter === 'class' ? 'primary' : ''"
                 (click)="setFilter('class')">Classes</button>
-        <button class="btn btn-secondary btn-sm"
-                [class.active]="selectedFilter === 'assignment'"
+        <button mat-stroked-button
+                [color]="selectedFilter === 'assignment' ? 'primary' : ''"
                 (click)="setFilter('assignment')">Assignments</button>
-        <button class="btn btn-secondary btn-sm"
-                [class.active]="selectedFilter === 'exam'"
+        <button mat-stroked-button
+                [color]="selectedFilter === 'exam' ? 'primary' : ''"
                 (click)="setFilter('exam')">Exams</button>
-        <button class="btn btn-secondary btn-sm"
-                [class.active]="selectedFilter === 'project'"
+        <button mat-stroked-button
+                [color]="selectedFilter === 'project' ? 'primary' : ''"
                 (click)="setFilter('project')">Projects</button>
       </div>
     </div>
     <div class="filter-group">
-      <label class="filter-label">Time period:</label>
-      <select class="form-input" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="semester">This Semester</option>
-        <option value="all">All Time</option>
-      </select>
+      <mat-form-field appearance="outline">
+        <mat-label>Time period</mat-label>
+        <mat-select [(ngModel)]="selectedPeriod" (selectionChange)="onPeriodChange()">
+          <mat-option value="week">This Week</mat-option>
+          <mat-option value="month">This Month</mat-option>
+          <mat-option value="semester">This Semester</mat-option>
+          <mat-option value="all">All Time</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
 
@@ -102,7 +105,7 @@
           <span class="icon">
             <span class="material-symbols-outlined">event</span>
           </span>
-          Dòng thời gian hoạt động
+          Activity Timeline
         </h3>
         <div class="timeline-controls">
           <button class="btn btn-secondary btn-sm" (click)="previousPeriod()">←</button>
@@ -147,9 +150,9 @@
           <span class="icon">
             <span class="material-symbols-outlined">schedule</span>
           </span>
-          Hoạt động gần đây
+          Recent Activities
         </h3>
-        <a href="#" class="card-link">Xem tất cả</a>
+        <a href="#" class="card-link">View All</a>
       </div>
       <div class="card-body">
         <div class="recent-list">
@@ -178,9 +181,9 @@
           <span class="icon">
             <span class="material-symbols-outlined">pending</span>
           </span>
-          Hoạt động sắp tới
+          Upcoming Activities
         </h3>
-        <a href="#" class="card-link">Xem lịch</a>
+        <a href="#" class="card-link">View Calendar</a>
       </div>
       <div class="card-body">
         <div class="upcoming-list">

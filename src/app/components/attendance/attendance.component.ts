@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 interface AttendanceStats {
   totalPresent: number;
@@ -39,7 +41,7 @@ interface Student {
 
 @Component({
   selector: 'app-attendance',
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.scss'
 })

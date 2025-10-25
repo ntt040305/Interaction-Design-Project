@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { AuthService, AppUser } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 interface ActivityStats {
   totalActivities: number;
@@ -25,14 +31,23 @@ interface Activity {
 
 @Component({
   selector: 'app-activity',
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule, 
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule
+  ],
   templateUrl: './activity.component.html',
   styleUrl: './activity.component.scss'
 })
-export class ActivityComponent {
+export class ActivityComponent implements OnInit, OnDestroy {
   selectedFilter: string = 'all';
   selectedPeriod: string = 'week';
   currentPeriod = 'This Week';
+  user: AppUser | null = null;
+  private sub?: Subscription;
 
   activityStats: ActivityStats = {
     totalActivities: 45,
@@ -96,6 +111,20 @@ export class ActivityComponent {
 
   recentActivities: Activity[] = this.activities.slice(0, 4);
   upcomingActivities: Activity[] = this.activities.filter(a => a.status === 'pending' || a.status === 'in-progress');
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.sub = this.authService.user$.subscribe(u => this.user = u);
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
+  }
+
+  isTeacher(): boolean {
+    return !!this.user && this.user.role === 'teacher';
+  }
 
   get filteredActivities(): Activity[] {
     let filtered = this.activities;

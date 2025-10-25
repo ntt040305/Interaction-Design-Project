@@ -2,11 +2,11 @@
   <!-- Welcome Section -->
   <div class="welcome-section">
         <div class="welcome-content">
-          <h1 class="welcome-title">Hello, Toan Thang!</h1>
+          <h1 class="welcome-title">Hello, {{ getUserName() }}!</h1>
           <p class="welcome-subtitle">Welcome back to your learning management system</p>
         </div>
         <div class="welcome-actions">
-          <button class="btn btn-primary">
+          <button mat-raised-button color="primary" class="welcome-btn">
             View Today's Schedule
           </button>
         </div>
@@ -14,49 +14,99 @@
 
   <!-- Quick Stats -->
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-symbols-outlined">analytics</span>
+    <!-- Student Stats -->
+    <ng-container *ngIf="isStudent()">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">analytics</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">95%</div>
+          <div class="stat-label">Attendance Rate</div>
+          <div class="stat-change positive">+2% from last month</div>
+        </div>
       </div>
-      <div class="stat-content">
-        <div class="stat-value">95%</div>
-        <div class="stat-label">Attendance Rate</div>
-        <div class="stat-change positive">+2% from last month</div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">school</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">8</div>
+          <div class="stat-label">Active Courses</div>
+          <div class="stat-change neutral">Current semester</div>
+        </div>
       </div>
-    </div>
-    
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-symbols-outlined">school</span>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">work</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Ongoing Projects</div>
+          <div class="stat-change positive">1 new project</div>
+        </div>
       </div>
-      <div class="stat-content">
-        <div class="stat-value">8</div>
-        <div class="stat-label">Active Courses</div>
-        <div class="stat-change neutral">Current semester</div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">emoji_events</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">3.8</div>
+          <div class="stat-label">Average Grade</div>
+          <div class="stat-change positive">+0.2 from last semester</div>
+        </div>
       </div>
-    </div>
-    
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-symbols-outlined">work</span>
+    </ng-container>
+
+    <!-- Teacher Stats -->
+    <ng-container *ngIf="isTeacher()">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">group</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">45</div>
+          <div class="stat-label">Total Students</div>
+          <div class="stat-change positive">+3 this semester</div>
+        </div>
       </div>
-      <div class="stat-content">
-        <div class="stat-value">3</div>
-        <div class="stat-label">Ongoing Projects</div>
-        <div class="stat-change positive">1 new project</div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">school</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Active Classes</div>
+          <div class="stat-change neutral">Current semester</div>
+        </div>
       </div>
-    </div>
-    
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-symbols-outlined">emoji_events</span>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">assignment</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Pending Grading</div>
+          <div class="stat-change warning">Needs attention</div>
+        </div>
       </div>
-      <div class="stat-content">
-        <div class="stat-value">3.8</div>
-        <div class="stat-label">Average Grade</div>
-        <div class="stat-change positive">+0.2 from last semester</div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">check_circle</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">92%</div>
+          <div class="stat-label">Attendance Rate</div>
+          <div class="stat-change positive">+5% from last month</div>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 
   <!-- Main Content Grid -->
@@ -194,7 +244,7 @@
           Grade Chart
         </h3>
         <div class="chart-period">
-          <button class="btn btn-secondary btn-sm">This Month</button>
+          <button mat-stroked-button>This Month</button>
         </div>
       </div>
       <div class="card-body">

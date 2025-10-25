@@ -1,0 +1,245 @@
+<div class="attendance-teacher-container">
+  <!-- Header Section -->
+  <div class="attendance-header">
+    <div class="header-content">
+      <h1 class="page-title">Class Attendance</h1>
+      <p class="page-subtitle">Track and manage student attendance for your classes</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="startNewSession()">
+        <mat-icon>add</mat-icon>
+        Create New Session
+      </button>
+    </div>
+  </div>
+
+  <div class="attendance-content">
+    <!-- Session Selection -->
+    <div class="session-section">
+      <h2>Select Session</h2>
+      <div class="session-list">
+        <div 
+          *ngFor="let session of classSessions" 
+          class="session-card"
+          [class.selected]="selectedSession?.id === session.id"
+          (click)="selectSession(session)">
+          <div class="session-title">{{ session.title }}</div>
+          <div class="session-details">
+            <span class="session-date">{{ session.date | date:'dd/MM/yyyy' }}</span>
+            <span class="session-time">{{ session.startTime }} - {{ session.endTime }}</span>
+          </div>
+          <div class="session-info">
+            <span class="session-subject">{{ session.subject }}</span>
+            <span class="session-room">{{ session.room }}</span>
+          </div>
+          <div class="attendance-stats">
+            <span class="attendance-percentage">{{ getAttendancePercentage() }}% Present</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Session Form -->
+    <div class="new-session-form" *ngIf="isCreatingNewSession">
+      <h2>Create New Session</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Session Name</mat-label>
+            <input 
+              matInput
+              type="text" 
+              id="session-title"
+              [(ngModel)]="newSession.title"
+              placeholder="e.g: Web Programming - Session 3">
+          </mat-form-field>
+        </div>
+        
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Subject</mat-label>
+            <input 
+              matInput
+              type="text" 
+              id="session-subject"
+              [(ngModel)]="newSession.subject"
+              placeholder="e.g: Web Programming">
+          </mat-form-field>
+        </div>
+        
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Date</mat-label>
+            <input 
+              matInput
+              type="date" 
+              id="session-date"
+              [(ngModel)]="newSession.date">
+          </mat-form-field>
+        </div>
+        
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Room</mat-label>
+            <input 
+              matInput
+              type="text" 
+              id="session-room"
+              [(ngModel)]="newSession.room"
+              placeholder="e.g: A101">
+          </mat-form-field>
+        </div>
+        
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Start Time</mat-label>
+            <input 
+              matInput
+              type="time" 
+              id="start-time"
+              [(ngModel)]="newSession.startTime">
+          </mat-form-field>
+        </div>
+        
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>End Time</mat-label>
+            <input 
+              matInput
+              type="time" 
+              id="end-time"
+              [(ngModel)]="newSession.endTime">
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button mat-raised-button color="primary" (click)="createSession()">
+          <mat-icon>save</mat-icon>
+          Create Session
+        </button>
+        <button mat-stroked-button (click)="isCreatingNewSession = false">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Attendance Management -->
+    <div class="attendance-section" *ngIf="selectedSession && !isCreatingNewSession">
+      <div class="attendance-header-section">
+        <h2>Attendance: {{ selectedSession.title }}</h2>
+        <div class="attendance-stats-overview">
+          <div class="stat-item">
+            <span class="stat-label">Total Students:</span>
+            <span class="stat-value">{{ selectedSession.attendance.length }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Present:</span>
+            <span class="stat-value present">{{ getAttendanceStats().present }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Absent:</span>
+            <span class="stat-value absent">{{ getAttendanceStats().absent }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Late:</span>
+            <span class="stat-value late">{{ getAttendanceStats().late }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Excused:</span>
+            <span class="stat-value excused">{{ getAttendanceStats().excused }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="attendance-controls">
+        <div class="filter-controls">
+          <mat-form-field appearance="outline">
+            <mat-label>Filter by Status</mat-label>
+            <mat-select 
+              id="attendance-filter"
+              [(ngModel)]="attendanceFilter">
+              <mat-option value="all">All</mat-option>
+              <mat-option value="present">Present</mat-option>
+              <mat-option value="absent">Absent</mat-option>
+              <mat-option value="late">Late</mat-option>
+              <mat-option value="excused">Excused</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="attendance-list">
+        <div class="attendance-list-header">
+          <div class="header-cell">Student</div>
+          <div class="header-cell">Status</div>
+          <div class="header-cell">Check-in Time</div>
+          <div class="header-cell">Notes</div>
+          <div class="header-cell">Actions</div>
+        </div>
+        
+        <div class="attendance-items">
+          <div 
+            *ngFor="let record of getFilteredAttendance()" 
+            class="attendance-item">
+            <div class="student-info">
+              <div class="student-avatar">
+                <span class="avatar-text">{{ record.studentName.charAt(0) }}</span>
+              </div>
+              <div class="student-details">
+                <div class="student-name">{{ record.studentName }}</div>
+                <div class="student-id">{{ record.studentId }}</div>
+              </div>
+            </div>
+            
+            <div class="status-cell">
+              <mat-form-field appearance="outline">
+                <mat-select 
+                  [(ngModel)]="record.status"
+                  (selectionChange)="updateAttendance(record.studentId, record.status)">
+                  <mat-option value="present">Present</mat-option>
+                  <mat-option value="absent">Absent</mat-option>
+                  <mat-option value="late">Late</mat-option>
+                  <mat-option value="excused">Excused</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            
+            <div class="time-cell">
+              <span *ngIf="record.checkInTime" class="check-in-time">
+                {{ record.checkInTime | date:'HH:mm' }}
+              </span>
+              <span *ngIf="!record.checkInTime" class="no-time">-</span>
+            </div>
+            
+            <div class="notes-cell">
+              <mat-form-field appearance="outline">
+                <input 
+                  matInput
+                  type="text"
+                  [(ngModel)]="record.notes"
+                  (blur)="updateNotes(record.studentId, record.notes || '')"
+                  placeholder="Add notes...">
+              </mat-form-field>
+            </div>
+            
+            <div class="actions-cell">
+              <button 
+                class="accept-btn"
+                (click)="updateAttendance(record.studentId, 'present')"
+                title="Mark as Present">
+                ✓
+              </button>
+              <button 
+                class="deny-btn"
+                (click)="updateAttendance(record.studentId, 'absent')"
+                title="Mark as Absent">
+                ✗
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,16 +1,19 @@
 /* Global Styles for Student Management System */
 
+/* Angular Material Core Styles */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
 /* CSS Variables for Design System */
 :root {
   /* Primary Colors */
-  --primary-color: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-light: #60a5fa;
+  --primary-color: #70B2B2;
+  --primary-dark: #5a9c9c;
+  --primary-light: #8bc4c4;
   
   /* Secondary Colors */
-  --secondary-color: #6366f1;
-  --secondary-dark: #4f46e5;
-  --secondary-light: #818cf8;
+  --secondary-color: #70B2B2;
+  --secondary-dark: #5a9c9c;
+  --secondary-light: #8bc4c4;
   
   /* Neutral Colors */
   --gray-50: #f9fafb;
@@ -91,7 +94,7 @@
 
 /* Reset and Base Styles */
 * {
-  margin: 0;
+  margin-top: 5px;
   padding: 0;
   box-sizing: border-box;
 }
@@ -350,4 +353,156 @@ main {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--gray-500);
+}
+
+/* Global Material Design Component Fixes */
+::ng-deep {
+  // Fix text overlap issues globally for all Material buttons
+  .mat-mdc-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-outlined-button,
+  .mat-mdc-unelevated-button,
+  .mat-mdc-icon-button {
+    .mdc-button__label {
+      z-index: 2 !important;
+      position: relative !important;
+    }
+    
+    .mat-mdc-button-persistent-ripple,
+    .mat-ripple {
+      z-index: 0 !important;
+    }
+    
+    .mat-mdc-button-touch-target {
+      z-index: 0 !important;
+    }
+  }
+  
+  // Material Icons global styling
+  .mat-icon,
+  .material-symbols-outlined,
+  .material-icons {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    user-select: none;
+    z-index: 2;
+    position: relative;
+  }
+  
+  // Material Form Field improvements
+  .mat-mdc-form-field {
+    .mat-mdc-input-element,
+    .mat-mdc-select,
+    .mat-mdc-select-value {
+      z-index: 2 !important;
+      position: relative !important;
+    }
+    
+    .mat-mdc-form-field-infix {
+      z-index: 2 !important;
+      position: relative !important;
+    }
+  }
+  
+  // Material Badge improvements
+  .mat-badge-content {
+    z-index: 3 !important;
+    font-weight: 600 !important;
+  }
+  
+  // Material Card improvements
+  .mat-mdc-card {
+    .mat-mdc-card-title,
+    .mat-mdc-card-subtitle,
+    .mat-mdc-card-content {
+      z-index: 2 !important;
+      position: relative !important;
+    }
+  }
+  
+  // Ensure Material tooltips are above everything
+  .mat-mdc-tooltip {
+    z-index: 1000 !important;
+  }
+  
+  // Material Menu improvements
+  .mat-mdc-menu-panel {
+    z-index: 100 !important;
+  }
+  
+  // Material Dialog improvements
+  .mat-mdc-dialog-container {
+    .mat-mdc-dialog-title,
+    .mat-mdc-dialog-content,
+    .mat-mdc-dialog-actions {
+      z-index: 2 !important;
+      position: relative !important;
+    }
+  }
+  
+  .mat-mdc-unelevated-button.mat-primary {
+    --mdc-filled-button-container-color: #70B2B2 !important;
+    --mdc-filled-button-label-text-color: white !important;
+    
+    &:hover:not(:disabled) {
+      --mdc-filled-button-container-color: #5a9c9c !important;
+    }
+  }
+  
+  .mat-mdc-outlined-button.mat-primary {
+    --mdc-outlined-button-label-text-color: #70B2B2 !important;
+    --mdc-outlined-button-outline-color: #70B2B2 !important;
+    
+    &:hover:not(:disabled) {
+      background-color: rgba(112, 178, 178, 0.08) !important;
+    }
+  }
+  
+  .mat-mdc-button.mat-primary {
+    --mdc-text-button-label-text-color: #70B2B2 !important;
+    
+    &:hover:not(:disabled) {
+      background-color: rgba(112, 178, 178, 0.08) !important;
+    }
+  }
+  
+  .mat-mdc-icon-button.mat-primary {
+    --mdc-icon-button-icon-color: #70B2B2 !important;
+  }
+  
+  .mat-mdc-fab.mat-primary,
+  .mat-mdc-mini-fab.mat-primary {
+    --mdc-fab-container-color: #70B2B2 !important;
+    --mdc-fab-icon-color: white !important;
+    
+    &:hover:not(:disabled) {
+      --mdc-fab-container-color: #5a9c9c !important;
+    }
+  }
+}
+
+/* Material Button Color Overrides - Outside ng-deep for higher specificity */
+.mat-mdc-raised-button:not(:disabled):not(.mat-mdc-button-disabled) {
+  --mdc-protected-button-container-color: #016B61 !important;
+  --mdc-protected-button-label-text-color: white !important;
+  background-color: #016B61 !important;
+  
+  &:hover {
+    --mdc-protected-button-container-color: #015650 !important;
+    background-color: #015650 !important;
+  }
+  
+  .mat-mdc-button-touch-target {
+    background-color: transparent !important;
+  }
+  
+  .mdc-button__label {
+    color: white !important;
+    z-index: 2 !important;
+  }
+  
+  .mat-icon {
+    color: white !important;
+  }
 }

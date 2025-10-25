@@ -6,16 +6,17 @@
   </div>
   
   <div class="header-center">
-    <div class="search-container">
-      <input type="search" placeholder="Search courses, assignments..." class="search-input">
-    </div>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="search" placeholder="Search courses, assignments..." class="search-input">
+    </mat-form-field>
   </div>
   
   <div class="header-right">
     <div class="header-info">
       <div class="welcome-text">
         <span class="greeting">Hello,</span>
-        <span class="student-name">Toan Thang</span>
+        <span class="student-name">{{ user?.displayName || 'Guest' }}</span>
       </div>
       <div class="current-time">
         <span class="time">{{ currentTime | date:'HH:mm' }}</span>
@@ -24,18 +25,41 @@
     </div>
     
     <div class="header-actions">
-      <!-- <button class="action-btn" title="Dark Mode">
-        <span class="icon">🌙</span>
-      </button> -->
-      <span class="action-btn notification-btn" title="Notifications">
-        <span class="material-symbols-outlined">notifications</span>
-        <span class="notification-badge">3</span>
-      </span>
-      <button class="action-btn profile-btn" title="Profile">
-        <div class="profile-avatar">
-          <span class="avatar-text">TT</span>
-        </div>
+      <button mat-icon-button class="action-btn notification-btn" title="Notifications" [matBadge]="3" matBadgeColor="warn">
+        <mat-icon>notifications</mat-icon>
       </button>
+      <ng-container *ngIf="!user">
+        <button mat-raised-button color="primary" (click)="signIn()">Sign in with Google</button>
+      </ng-container>
+
+      <ng-container *ngIf="user">
+        <div class="profile-dropdown-container">
+          <button mat-icon-button class="action-btn profile-btn" title="Profile">
+            <div class="profile-avatar">
+              <img *ngIf="user.photoURL" [src]="user.photoURL" alt="avatar" class="avatar-img" />
+              <span *ngIf="!user.photoURL" class="avatar-text">{{ initials }}</span>
+            </div>
+          </button>
+          
+          <!-- Dropdown menu -->
+          <div class="profile-dropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-avatar">
+                <img *ngIf="user.photoURL" [src]="user.photoURL" alt="avatar" />
+                <span *ngIf="!user.photoURL" class="avatar-text">{{ initials }}</span>
+              </div>
+              <div class="dropdown-info">
+                <div class="dropdown-name">{{ user.displayName || 'Guest' }}</div>
+                <div class="dropdown-email">{{ user.email || 'No email' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button mat-icon-button class="action-btn" (click)="signOut()" title="Sign out">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </ng-container>
     </div>
   </div>
 </header>

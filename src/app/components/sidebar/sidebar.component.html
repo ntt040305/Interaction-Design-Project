@@ -6,9 +6,10 @@
   </div>
   
   <div class="sidebar-content">
+    <!-- Common Navigation -->
     <ul class="nav-menu">
       <li class="nav-item">
-        <a routerLink="/" routerLinkActive="active" class="nav-link">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
           <span class="nav-icon material-symbols-outlined">home</span>
           <span class="nav-text">Home</span>
         </a>
@@ -22,6 +23,16 @@
       </li>
       
       <li class="nav-item">
+        <a routerLink="/activity" routerLinkActive="active" class="nav-link">
+          <span class="nav-icon material-symbols-outlined">event</span>
+          <span class="nav-text">Activities</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Student Navigation -->
+    <ul class="nav-menu" *ngIf="isStudent()">
+      <li class="nav-item">
         <a routerLink="/attendance" routerLinkActive="active" class="nav-link">
           <span class="nav-icon material-symbols-outlined">check_circle</span>
           <span class="nav-text">Attendance</span>
@@ -30,17 +41,27 @@
       </li>
       
       <li class="nav-item">
-        <a routerLink="/activity" routerLinkActive="active" class="nav-link">
-          <span class="nav-icon material-symbols-outlined">event</span>
-          <span class="nav-text">Activities</span>
-        </a>
-      </li>
-      
-      <li class="nav-item">
         <a routerLink="/project" routerLinkActive="active" class="nav-link">
           <span class="nav-icon material-symbols-outlined">work</span>
           <span class="nav-text">Projects</span>
           <span class="nav-badge">3</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Teacher Navigation -->
+    <ul class="nav-menu" *ngIf="isTeacher()">
+      <li class="nav-item">
+        <a routerLink="/attendance-teacher" routerLinkActive="active" class="nav-link">
+          <span class="nav-icon material-symbols-outlined">group</span>
+          <span class="nav-text">Attendance</span>
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a routerLink="/grading" routerLinkActive="active" class="nav-link">
+          <span class="nav-icon material-symbols-outlined">grade</span>
+          <span class="nav-text">Grading</span>
         </a>
       </li>
     </ul>
@@ -79,14 +100,27 @@
   </div>
   
   <div class="sidebar-footer">
-    <div class="user-info">
+    <div class="user-info" *ngIf="user; else guestInfo">
       <div class="user-avatar">
-        <span class="avatar-text">TT</span>
+        <img *ngIf="user.photoURL" [src]="user.photoURL" alt="avatar" class="avatar-img" />
+        <span *ngIf="!user.photoURL" class="avatar-text">{{ getUserInitials() }}</span>
       </div>
       <div class="user-details">
-        <div class="user-name">Toan Thang</div>
-        <div class="user-role">Student</div>
+        <div class="user-name">{{ user.displayName || 'User' }}</div>
+        <div class="user-role">{{ getUserRoleText() }}</div>
       </div>
     </div>
+    
+    <ng-template #guestInfo>
+      <div class="user-info">
+        <div class="user-avatar">
+          <span class="avatar-text">G</span>
+        </div>
+        <div class="user-details">
+        <div class="user-name">Guest</div>
+        <div class="user-role">Not logged in</div>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </nav>

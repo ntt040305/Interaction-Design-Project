@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 interface ProjectStats {
   completed: number;
@@ -54,12 +56,12 @@ interface ProjectActivity {
 
 @Component({
   selector: 'app-project',
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss'
 })
 export class ProjectComponent {
-  currentMonth = 'Tháng 12, 2024';
+  currentMonth = 'December, 2024';
 
   projectStats: ProjectStats = {
     completed: 8,
@@ -73,9 +75,9 @@ export class ProjectComponent {
   currentProjects: Project[] = [
     {
       id: '1',
-      title: 'Hệ thống quản lý sinh viên',
-      description: 'Phát triển ứng dụng web quản lý thông tin sinh viên',
-      subject: 'Lập trình Web',
+      title: 'Student Management System',
+      description: 'Develop a web application for managing student information',
+      subject: 'Web Programming',
       status: 'in-progress',
       deadline: new Date('2025-01-15'),
       progress: 75,
@@ -84,8 +86,8 @@ export class ProjectComponent {
     },
     {
       id: '2',
-      title: 'Phân tích dữ liệu bán hàng',
-      description: 'Sử dụng Python và Machine Learning để phân tích xu hướng bán hàng',
+      title: 'Sales Data Analysis',
+      description: 'Use Python and Machine Learning to analyze sales trends',
       subject: 'AI & Machine Learning',
       status: 'in-progress',
       deadline: new Date('2025-01-20'),
@@ -95,9 +97,9 @@ export class ProjectComponent {
     },
     {
       id: '3',
-      title: 'Thiết kế mạng LAN',
-      description: 'Thiết kế và triển khai mạng LAN cho công ty',
-      subject: 'Mạng máy tính',
+      title: 'LAN Network Design',
+      description: 'Design and implement LAN network for company',
+      subject: 'Computer Networks',
       status: 'pending',
       deadline: new Date('2025-02-01'),
       progress: 0,
@@ -109,25 +111,25 @@ export class ProjectComponent {
   projectMilestones: ProjectMilestone[] = [
     {
       id: '1',
-      title: 'Hoàn thành thiết kế UI',
-      project: 'Hệ thống quản lý sinh viên',
-      description: 'Thiết kế giao diện người dùng cho ứng dụng',
+      title: 'Complete UI Design',
+      project: 'Student Management System',
+      description: 'Design user interface for the application',
       date: new Date('2024-12-25'),
       status: 'pending'
     },
     {
       id: '2',
-      title: 'Thu thập dữ liệu',
-      project: 'Phân tích dữ liệu bán hàng',
-      description: 'Thu thập và làm sạch dữ liệu từ các nguồn khác nhau',
+      title: 'Data Collection',
+      project: 'Sales Data Analysis',
+      description: 'Collect and clean data from various sources',
       date: new Date('2024-12-20'),
       status: 'completed'
     },
     {
       id: '3',
-      title: 'Triển khai mô hình ML',
-      project: 'Phân tích dữ liệu bán hàng',
-      description: 'Xây dựng và triển khai mô hình dự đoán',
+      title: 'Deploy ML Model',
+      project: 'Sales Data Analysis',
+      description: 'Build and deploy prediction model',
       date: new Date('2025-01-10'),
       status: 'in-progress'
     }
@@ -140,38 +142,38 @@ export class ProjectComponent {
   };
 
   teamMembers: TeamMember[] = [
-    { id: '1', name: 'Nguyễn Văn A', role: 'Leader', status: 'online' },
-    { id: '2', name: 'Trần Thị B', role: 'Developer', status: 'busy' },
-    { id: '3', name: 'Lê Văn C', role: 'Designer', status: 'offline' },
-    { id: '4', name: 'Phạm Thị D', role: 'Analyst', status: 'online' }
+    { id: '1', name: 'John Smith', role: 'Leader', status: 'online' },
+    { id: '2', name: 'Sarah Johnson', role: 'Developer', status: 'busy' },
+    { id: '3', name: 'Michael Brown', role: 'Designer', status: 'offline' },
+    { id: '4', name: 'Emily Davis', role: 'Analyst', status: 'online' }
   ];
 
   recentActivities: ProjectActivity[] = [
     {
       id: '1',
-      title: 'Cập nhật tiến độ dự án',
-      project: 'Hệ thống quản lý sinh viên',
+      title: 'Updated project progress',
+      project: 'Student Management System',
       date: new Date('2024-12-23T10:00:00'),
       type: 'update'
     },
     {
       id: '2',
-      title: 'Thêm comment vào task',
-      project: 'Phân tích dữ liệu bán hàng',
+      title: 'Added comment to task',
+      project: 'Sales Data Analysis',
       date: new Date('2024-12-23T09:30:00'),
       type: 'comment'
     },
     {
       id: '3',
-      title: 'Upload tài liệu thiết kế',
-      project: 'Thiết kế mạng LAN',
+      title: 'Uploaded design document',
+      project: 'LAN Network Design',
       date: new Date('2024-12-22T16:00:00'),
       type: 'file'
     },
     {
       id: '4',
-      title: 'Meeting review dự án',
-      project: 'Hệ thống quản lý sinh viên',
+      title: 'Project review meeting',
+      project: 'Student Management System',
       date: new Date('2024-12-22T14:00:00'),
       type: 'meeting'
     }
@@ -187,15 +189,15 @@ export class ProjectComponent {
 
   getStatusText(status: string): string {
     switch (status) {
-      case 'completed': return 'Hoàn thành';
-      case 'in-progress': return 'Đang thực hiện';
-      case 'pending': return 'Chờ bắt đầu';
-      case 'on-hold': return 'Tạm dừng';
-      case 'overdue': return 'Quá hạn';
-      case 'online': return 'Trực tuyến';
-      case 'offline': return 'Ngoại tuyến';
-      case 'busy': return 'Bận';
-      default: return 'Không xác định';
+      case 'completed': return 'Completed';
+      case 'in-progress': return 'In Progress';
+      case 'pending': return 'Pending';
+      case 'on-hold': return 'On Hold';
+      case 'overdue': return 'Overdue';
+      case 'online': return 'Online';
+      case 'offline': return 'Offline';
+      case 'busy': return 'Busy';
+      default: return 'Unknown';
     }
   }
 
@@ -214,12 +216,12 @@ export class ProjectComponent {
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
     
     if (diffInHours < 1) {
-      return 'Vừa xong';
+      return 'Just now';
     } else if (diffInHours < 24) {
-      return `${diffInHours} giờ trước`;
+      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
     } else {
       const diffInDays = Math.floor(diffInHours / 24);
-      return `${diffInDays} ngày trước`;
+      return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
     }
   }
 }

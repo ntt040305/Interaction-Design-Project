@@ -8,10 +8,8 @@
       <p class="page-subtitle">Track and manage your academic projects</p>
     </div>
     <div class="header-actions">
-      <button class="btn btn-primary">
-        <span class="icon">
-          <span class="material-symbols-outlined">add</span>
-        </span>
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
         Create New Project
       </button>
     </div>
@@ -90,7 +88,7 @@
             </div>
             <div class="project-progress">
               <div class="progress-header">
-                <span class="progress-label">Tiến độ</span>
+                <span class="progress-label">Progress</span>
                 <span class="progress-percentage">{{ project.progress }}%</span>
               </div>
               <div class="progress-bar">
@@ -103,8 +101,8 @@
               </div>
             </div>
             <div class="project-actions">
-              <button class="btn btn-secondary btn-sm">Details</button>
-              <button class="btn btn-primary btn-sm">Update</button>
+              <button mat-stroked-button>Details</button>
+              <button mat-raised-button color="primary">Update</button>
             </div>
           </div>
         </div>
@@ -121,9 +119,13 @@
           Project Timeline
         </h3>
           <div class="timeline-controls">
-          <button class="btn btn-secondary btn-sm" (click)="previousMonth()">←</button>
+          <button mat-icon-button (click)="previousMonth()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
           <span class="current-month">{{ currentMonth }}</span>
-          <button class="btn btn-secondary btn-sm" (click)="nextMonth()">→</button>
+          <button mat-icon-button (click)="nextMonth()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
         </div>
       </div>
       <div class="card-body">

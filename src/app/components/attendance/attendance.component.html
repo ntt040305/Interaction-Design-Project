@@ -8,7 +8,8 @@
         <p class="page-subtitle">Track and analyze your attendance rate</p>
     </div>
     <div class="header-actions">
-      <button class="btn btn-primary">
+      <button mat-raised-button color="primary">
+        <mat-icon>event_available</mat-icon>
         Request Leave
       </button>
     </div>
@@ -69,11 +70,11 @@
           Overall Attendance Rate
         </h3>
         <div class="rate-period">
-        <button class="btn btn-secondary btn-sm" 
-                [class.active]="selectedPeriod === 'month'"
+        <button mat-stroked-button
+                [color]="selectedPeriod === 'month' ? 'primary' : ''"
                 (click)="setPeriod('month')">Month</button>
-        <button class="btn btn-secondary btn-sm"
-                [class.active]="selectedPeriod === 'semester'"
+        <button mat-stroked-button
+                [color]="selectedPeriod === 'semester' ? 'primary' : ''"
                 (click)="setPeriod('semester')">Semester</button>
         </div>
       </div>
@@ -126,7 +127,7 @@
   *ngFor="let week of weeklyData"
                  [style.height]="getBarHeight(week.rate)">
               <div class="bar-value">{{ week.rate }}%</div>
-              <div class="bar-label">Tuần {{ week.week }}</div>
+              <div class="bar-label">Week {{ week.week }}</div>
             </div>
           </div>
         </div>
@@ -142,9 +143,9 @@
           <span class="icon">
             <span class="material-symbols-outlined">school</span>
           </span>
-          Điểm danh theo môn học
+          Attendance by Subject
         </h3>
-        <a href="#" class="card-link">Xem chi tiết</a>
+        <a href="#" class="card-link">View Details</a>
       </div>
       <div class="card-body">
         <div class="subject-list">
@@ -176,9 +177,9 @@
           <span class="icon">
             <span class="material-symbols-outlined">event</span>
           </span>
-          Lịch sử điểm danh gần đây
+          Recent Attendance History
         </h3>
-        <a href="#" class="card-link">Xem tất cả</a>
+        <a href="#" class="card-link">View All</a>
       </div>
       <div class="card-body">
         <div class="attendance-history">
@@ -210,18 +211,18 @@
           <span class="icon">
             <span class="material-symbols-outlined">emoji_events</span>
           </span>
-          Sinh viên có điểm danh tốt nhất
+          Students with Best Attendance
         </h3>
-        <a href="#" class="card-link">Xem bảng xếp hạng</a>
+        <a href="#" class="card-link">View Leaderboard</a>
       </div>
       <div class="card-body">
         <div class="students-table">
           <div class="table-header">
             <div class="col-rank">#</div>
-            <div class="col-name">Tên</div>
-            <div class="col-id">MSSV</div>
-            <div class="col-rate">Tỷ lệ</div>
-            <div class="col-progress">Tiến độ</div>
+            <div class="col-name">Name</div>
+            <div class="col-id">Student ID</div>
+            <div class="col-rate">Rate</div>
+            <div class="col-progress">Progress</div>
           </div>
           <div class="table-body">
             <div class="table-row" *ngFor="let student of topStudents; let i = index">

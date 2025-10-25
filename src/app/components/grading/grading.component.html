@@ -1,0 +1,155 @@
+<div class="grading-container">
+  <!-- Header Section -->
+  <div class="grading-header">
+    <div class="header-content">
+      <h1 class="page-title">Student Grading</h1>
+      <p class="page-subtitle">Manage and track student grades and assignments</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        Add Assignment
+      </button>
+    </div>
+  </div>
+
+  <!-- Class Stats -->
+  <div class="class-stats-section">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">group</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ students.length }}</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-symbols-outlined">analytics</span>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getClassAverage() }}/{{ selectedAssignment?.totalPoints }}</div>
+        <div class="stat-label">Class Average</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grading-content">
+    <!-- Assignment Selection -->
+    <div class="assignment-section">
+      <h2>Select Assignment</h2>
+      <div class="assignment-list">
+        <div 
+          *ngFor="let assignment of assignments" 
+          class="assignment-card"
+          [class.selected]="selectedAssignment?.id === assignment.id"
+          (click)="selectAssignment(assignment)">
+          <div class="assignment-title">{{ assignment.title }}</div>
+          <div class="assignment-details">
+            <span class="due-date">Due: {{ assignment.dueDate | date:'dd/MM/yyyy' }}</span>
+            <span class="total-points">{{ assignment.totalPoints }} points</span>
+          </div>
+          <div class="submission-count">
+            {{ assignment.submissions.length }}/{{ students.length }} students submitted
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student List and Grading -->
+    <div class="grading-section" *ngIf="selectedAssignment">
+      <h2>Student List - {{ selectedAssignment.title }}</h2>
+      
+      <div class="grading-grid">
+        <!-- Student List -->
+        <div class="student-list">
+          <div class="student-list-header">
+            <h3>Student List</h3>
+            <div class="filter-options">
+              <mat-form-field appearance="outline">
+                <mat-label>Filter</mat-label>
+                <mat-select value="all">
+                  <mat-option value="all">All</mat-option>
+                  <mat-option value="submitted">Submitted</mat-option>
+                  <mat-option value="not-submitted">Not Submitted</mat-option>
+                  <mat-option value="graded">Graded</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <div class="student-items">
+            <div 
+              *ngFor="let student of students" 
+              class="student-item"
+              [class.selected]="selectedStudent?.id === student.id"
+              (click)="selectStudent(student)">
+              <div class="student-avatar">
+                <span class="avatar-text">{{ student.name.charAt(0) }}</span>
+              </div>
+              <div class="student-info">
+                <div class="student-name">{{ student.name }}</div>
+                <div class="student-id">{{ student.studentId }}</div>
+                <div class="submission-status" [class]="getSubmissionStatus(student.id).toLowerCase().replace(' ', '-')">
+                  {{ getSubmissionStatus(student.id) }}
+                </div>
+              </div>
+              <div class="student-grade" *ngIf="getSubmissionGrade(student.id) !== null">
+                {{ getSubmissionGrade(student.id) }}/{{ selectedAssignment.totalPoints }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grading Form -->
+        <div class="grading-form" *ngIf="selectedStudent">
+          <div class="grading-form-header">
+            <h3>Grading: {{ selectedStudent.name }}</h3>
+            <div class="student-details">
+              <span class="student-id">{{ selectedStudent.studentId }}</span>
+              <span class="student-email">{{ selectedStudent.email }}</span>
+            </div>
+          </div>
+
+          <div class="grading-form-content">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Grade (0 - {{ selectedAssignment.totalPoints }})</mat-label>
+                <input 
+                  matInput
+                  type="number" 
+                  id="grade"
+                  [(ngModel)]="newGrade"
+                  [max]="selectedAssignment.totalPoints"
+                  min="0">
+              </mat-form-field>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Feedback</mat-label>
+                <textarea 
+                  matInput
+                  id="feedback"
+                  [(ngModel)]="newFeedback"
+                  placeholder="Enter feedback for student..."
+                  rows="4"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" (click)="saveGrade()">
+                <mat-icon>save</mat-icon>
+                Save Grade
+              </button>
+              <button mat-stroked-button (click)="selectedStudent = null">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,51 +3,48 @@
   <!-- Header Section -->
   <div class="timetable-header">
     <div class="header-content">
-        <h1 class="page-title">
-          Study Timetable
-        </h1>
-        <p class="page-subtitle">Manage your class schedule and events</p>
+        <h1 class="page-title">Study Timetable</h1>
     </div>
     <div class="header-actions">
       <div class="date-navigation">
-        <button class="btn btn-secondary" (click)="previousWeek()">
-          ←
+        <button mat-icon-button (click)="previousWeek()" class="nav-btn">
+          <mat-icon>chevron_left</mat-icon>
         </button>
-        <span class="current-week">{{ currentWeekRange }}</span>
-        <button class="btn btn-secondary" (click)="nextWeek()">
-          →
+        <div class="week-display">{{ currentWeekRange }}</div>
+        <button mat-icon-button (click)="nextWeek()" class="nav-btn">
+          <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
-      <button class="btn btn-primary">
-        Add Event
+      <button *ngIf="isTeacher()" mat-raised-button color="primary" (click)="openAddClassDialog()">
+        <mat-icon>add</mat-icon>
+        Add Class
       </button>
     </div>
   </div>
 
-  <!-- Week View -->
-  <div class="week-view">
-    <div class="time-column">
-        <div class="time-header">Time</div>
-  <div class="time-slots">
-  <div class="time-slot" *ngFor="let time of timeSlots">{{ time }}</div>
-  </div>
-    </div>
-    
-    <div class="days-grid">
-  <div class="day-column" *ngFor="let day of weekDays; let i = index">
-        <div class="day-header">
+  <!-- Simple Week View -->
+  <div class="week-view-simple">
+    <div class="week-grid">
+      <div class="day-column" *ngFor="let day of weekDays">
+        <div class="day-header" [class.today]="isToday(day)">
           <div class="day-name">{{ day.name }}</div>
           <div class="day-date">{{ day.date }}</div>
         </div>
-    <div class="day-content">
-    <div class="class-slot" 
-      *ngFor="let slot of getClassesForDay(day.name)"
-               [class]="'class-' + slot.type"
-               [style.top]="getSlotPosition(slot.startTime)"
-               [style.height]="getSlotHeight(slot.startTime, slot.endTime)">
-            <div class="class-subject">{{ slot.subject }}</div>
-            <div class="class-room">{{ slot.room }}</div>
-            <div class="class-time">{{ slot.startTime }} - {{ slot.endTime }}</div>
+        <div class="day-classes">
+          <div class="class-card" 
+               *ngFor="let classItem of getClassesForDay(day.name)"
+               [class]="'type-' + classItem.type">
+            <div class="class-time-badge">{{ classItem.startTime }} - {{ classItem.endTime }}</div>
+            <div class="class-info">
+              <div class="class-name">{{ classItem.subject }}</div>
+              <div class="class-details">
+                <span class="class-room">📍 {{ classItem.room }}</span>
+                <span class="class-teacher">👤 {{ classItem.teacher }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="no-class" *ngIf="getClassesForDay(day.name).length === 0">
+            No classes scheduled
           </div>
         </div>
       </div>
@@ -59,10 +56,10 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">
-          <span class="icon">📚</span>
-          Lịch học hôm nay - {{ today | date:'dd/MM/yyyy' }}
+          <!-- <span class="icon">📚</span> -->
+          Today's Schedule - {{ today | date:'dd/MM/yyyy' }}
         </h3>
-        <span class="card-badge">{{ getTodayClasses().length }} môn</span>
+        <span class="card-badge">{{ getTodayClasses().length }} classes</span>
       </div>
         <div class="card-body">
         <div class="schedule-list" *ngIf="getTodayClasses().length > 0; else noClasses">
@@ -96,32 +93,75 @@
     </div>
   </div>
 
-  <!-- Upcoming Events -->
-  <div class="upcoming-events">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">
-          Upcoming Events
-        </h3>
-        <a href="#" class="card-link">View All</a>
+  <!-- Add Class Dialog -->
+  <div class="dialog-overlay" *ngIf="showAddDialog" (click)="closeAddClassDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Add New Class Schedule</h2>
+        <button mat-icon-button (click)="closeAddClassDialog()">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
-      <div class="card-body">
-        <div class="events-list">
-          <div class="event-item" *ngFor="let event of upcomingEvents">
-            <div class="event-date">
-              <div class="event-day">{{ event.date | date:'dd' }}</div>
-              <div class="event-month">{{ event.date | date:'MMM' }}</div>
-            </div>
-            <div class="event-content">
-              <div class="event-title">{{ event.title }}</div>
-              <div class="event-time">{{ event.time }}</div>
-              <div class="event-location">{{ event.location }}</div>
-            </div>
-            <div class="event-type" [class]="'type-' + event.type">
-              {{ event.type }}
-            </div>
+      <div class="dialog-body">
+        <form class="add-class-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Subject Name</mat-label>
+            <input matInput [(ngModel)]="newClass.subject" name="subject" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Room</mat-label>
+            <input matInput [(ngModel)]="newClass.room" name="room" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Teacher</mat-label>
+            <input matInput [(ngModel)]="newClass.teacher" name="teacher" required>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Start Time</mat-label>
+              <mat-select [(ngModel)]="newClass.startTime" name="startTime" required>
+                <mat-option *ngFor="let time of timeSlots" [value]="time">{{ time }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>End Time</mat-label>
+              <mat-select [(ngModel)]="newClass.endTime" name="endTime" required>
+                <mat-option *ngFor="let time of timeSlots" [value]="time">{{ time }}</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
-        </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Day of Week</mat-label>
+            <mat-select [(ngModel)]="newClass.day" name="day" required>
+              <mat-option value="Monday">Monday</mat-option>
+              <mat-option value="Tuesday">Tuesday</mat-option>
+              <mat-option value="Wednesday">Wednesday</mat-option>
+              <mat-option value="Thursday">Thursday</mat-option>
+              <mat-option value="Friday">Friday</mat-option>
+              <mat-option value="Saturday">Saturday</mat-option>
+              <mat-option value="Sunday">Sunday</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Class Type</mat-label>
+            <mat-select [(ngModel)]="newClass.type" name="type" required>
+              <mat-option value="lecture">Lecture</mat-option>
+              <mat-option value="lab">Lab</mat-option>
+              <mat-option value="seminar">Seminar</mat-option>
+              <mat-option value="exam">Exam</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="dialog-actions">
+        <button mat-stroked-button (click)="closeAddClassDialog()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="addClass()">Add Class</button>
       </div>
     </div>
   </div>

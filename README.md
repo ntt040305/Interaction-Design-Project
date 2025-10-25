@@ -1,59 +1,149 @@
-# TimetableWeb
+# TimeTableID - Hệ thống quản lý thời khóa biểu
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
+Hệ thống quản lý thời khóa biểu với phân quyền người dùng (Sinh viên/Giảng viên) sử dụng Firebase Authentication.
 
-## Development server
+## Tính năng chính
 
-To start a local development server, run:
+### 🔐 Xác thực người dùng
+- Đăng nhập bằng Google Firebase Authentication
+- Phân quyền tự động dựa trên đuôi email:
+  - **Sinh viên**: `@student.hsu.edu.vn`
+  - **Giảng viên**: `@teacher.hsu.edu.vn` hoặc `@hsu.edu.vn`
 
+### 👨‍🎓 Dành cho Sinh viên
+- **Dashboard**: Tổng quan điểm danh, khóa học, dự án
+- **Timetable**: Xem lịch học
+- **Attendance**: Theo dõi điểm danh
+- **Activities**: Hoạt động và sự kiện
+- **Projects**: Quản lý dự án
+
+### 👨‍🏫 Dành cho Giảng viên
+- **Dashboard**: Tổng quan sinh viên, lớp học, chấm điểm
+- **Timetable**: Xem lịch dạy
+- **Điểm danh**: Quản lý điểm danh sinh viên
+- **Chấm điểm**: Chấm điểm và nhận xét bài tập
+- **Activities**: Quản lý hoạt động
+
+## Cài đặt và chạy
+
+### Yêu cầu hệ thống
+- Node.js (phiên bản 18 trở lên)
+- Angular CLI
+- Firebase project
+
+### Cài đặt
 ```bash
+# Clone repository
+git clone <repository-url>
+cd timetable-web
+
+# Cài đặt dependencies
+npm install
+
+# Cấu hình Firebase
+# Cập nhật thông tin Firebase trong src/app/app.config.ts
+```
+
+### Cấu hình Firebase
+1. Tạo project Firebase tại [Firebase Console](https://console.firebase.google.com)
+2. Bật Authentication và chọn Google provider
+3. Cập nhật cấu hình trong `src/app/app.config.ts`:
+
+```typescript
+provideFirebaseApp(() => initializeApp({
+  apiKey: "your-api-key",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "your-sender-id",
+  appId: "your-app-id"
+}))
+```
+
+### Chạy ứng dụng
+```bash
+# Development server
 ng serve
+
+# Mở trình duyệt tại http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Cấu trúc dự án
 
-## Code scaffolding
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── dashboard/          # Trang chủ
+│   │   ├── timetable/          # Thời khóa biểu
+│   │   ├── attendance/         # Điểm danh (sinh viên)
+│   │   ├── attendance-teacher/ # Điểm danh (giảng viên)
+│   │   ├── activity/           # Hoạt động
+│   │   ├── project/            # Dự án
+│   │   ├── grading/            # Chấm điểm (giảng viên)
+│   │   ├── login/              # Đăng nhập
+│   │   ├── header/             # Header
+│   │   ├── sidebar/            # Sidebar
+│   │   └── footer/             # Footer
+│   ├── services/
+│   │   └── auth.service.ts     # Service xác thực
+│   ├── guards/
+│   │   ├── auth.guard.ts       # Guard xác thực
+│   │   └── teacher.guard.ts    # Guard giảng viên
+│   └── app.config.ts           # Cấu hình ứng dụng
+```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Tính năng kỹ thuật
 
+- **Angular 19**: Framework chính
+- **Firebase Authentication**: Xác thực người dùng
+- **TypeScript**: Ngôn ngữ lập trình
+- **SCSS**: Styling
+- **Responsive Design**: Giao diện thích ứng
+- **Role-based Access Control**: Phân quyền dựa trên vai trò
+
+## Hướng dẫn sử dụng
+
+### Đăng nhập
+1. Truy cập ứng dụng
+2. Nhấn "Đăng nhập với Google"
+3. Chọn tài khoản Google phù hợp với vai trò
+
+### Sinh viên
+- Xem lịch học và điểm danh
+- Theo dõi tiến độ dự án
+- Tham gia hoạt động
+
+### Giảng viên
+- Quản lý điểm danh lớp học
+- Chấm điểm và nhận xét bài tập
+- Theo dõi tiến độ sinh viên
+
+## Phát triển
+
+### Thêm component mới
 ```bash
-ng generate component component-name
+ng generate component components/component-name
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+### Thêm service mới
 ```bash
-ng generate --help
+ng generate service services/service-name
 ```
 
-## Building
-
-To build the project run:
-
+### Build production
 ```bash
-ng build
+ng build --configuration production
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Đóng góp
 
-## Running unit tests
+1. Fork repository
+2. Tạo feature branch
+3. Commit changes
+4. Push to branch
+5. Tạo Pull Request
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## License
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT License
