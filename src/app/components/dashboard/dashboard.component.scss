@@ -86,18 +86,18 @@
 // Material Button Styling
 .welcome-actions ::ng-deep {
   .mat-mdc-raised-button {
-    background: rgba(255, 255, 255, 0.95) !important;
-    color: var(--primary-color) !important;
+    background: #016b61 !important;
+    color: white !important;
     font-weight: 600 !important;
     padding: 12px 24px !important;
     border-radius: 8px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 12px rgba(1, 107, 97, 0.3) !important;
     transition: all 0.3s ease !important;
     
     &:hover {
-      background: white !important;
+      background: #014a43 !important;
       transform: translateY(-2px) !important;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+      box-shadow: 0 6px 16px rgba(1, 107, 97, 0.4) !important;
     }
     
     .mdc-button__label {
