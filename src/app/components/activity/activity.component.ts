@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 import { AuthService, AppUser } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 
@@ -37,7 +38,8 @@ interface Activity {
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    MatInputModule
   ],
   templateUrl: './activity.component.html',
   styleUrl: './activity.component.scss'
@@ -48,6 +50,17 @@ export class ActivityComponent implements OnInit, OnDestroy {
   currentPeriod = 'This Week';
   user: AppUser | null = null;
   private sub?: Subscription;
+  showAddDialog = false;
+  
+  newActivity: any = {
+    title: '',
+    description: '',
+    subject: '',
+    type: 'class',
+    status: 'pending',
+    dateInput: '',
+    priority: 'medium'
+  };
 
   activityStats: ActivityStats = {
     totalActivities: 45,
@@ -207,5 +220,62 @@ export class ActivityComponent implements OnInit, OnDestroy {
       const diffInDays = Math.floor(diffInHours / 24);
       return `${diffInDays} days ago`;
     }
+  }
+
+  openAddActivityDialog() {
+    this.showAddDialog = true;
+    this.newActivity = {
+      title: '',
+      description: '',
+      subject: '',
+      type: 'class',
+      status: 'pending',
+      dateInput: '',
+      priority: 'medium'
+    };
+  }
+
+  closeAddDialog() {
+    this.showAddDialog = false;
+  }
+
+  addActivity() {
+    if (!this.newActivity.title || !this.newActivity.description || !this.newActivity.subject) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const newId = Date.now().toString();
+    const newActivityItem: Activity = {
+      id: newId,
+      title: this.newActivity.title,
+      description: this.newActivity.description,
+      date: new Date(this.newActivity.dateInput || new Date()),
+      type: this.newActivity.type,
+      status: this.newActivity.status,
+      subject: this.newActivity.subject,
+      priority: this.newActivity.priority
+    };
+
+    this.activities.unshift(newActivityItem);
+    this.updateActivityStats();
+    this.closeAddDialog();
+    alert('Activity added successfully!');
+  }
+
+  deleteActivity(id: string) {
+    if (confirm('Are you sure you want to delete this activity?')) {
+      this.activities = this.activities.filter(a => a.id !== id);
+      this.updateActivityStats();
+      alert('Activity deleted successfully!');
+    }
+  }
+
+  updateActivityStats() {
+    this.activityStats.totalActivities = this.activities.length;
+    this.activityStats.completed = this.activities.filter(a => a.status === 'completed').length;
+    this.activityStats.pending = this.activities.filter(a => a.status === 'pending' || a.status === 'in-progress').length;
+    this.recentActivities = this.activities.slice(0, 4);
+    this.upcomingActivities = this.activities.filter(a => a.status === 'pending' || a.status === 'in-progress');
   }
 }

@@ -64,6 +64,9 @@ export class TimetableComponent implements OnInit, OnDestroy {
   ];
 
   weekDays: { name: string, date: string, fullDate: Date }[] = [];
+  
+  // Original classes (for students)
+  allClasses: ClassSchedule[] = [];
 
   classes: ClassSchedule[] = [
     // Monday
@@ -284,7 +287,18 @@ export class TimetableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.authService.user$.subscribe(u => this.user = u);
+    // Store original classes
+    this.allClasses = [...this.classes];
+    
+    this.sub = this.authService.user$.subscribe(u => {
+      this.user = u;
+      if (this.isTeacher()) {
+        this.setupTeacherClasses();
+      } else {
+        // For students, restore original classes
+        this.classes = [...this.allClasses];
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -380,6 +394,84 @@ export class TimetableComponent implements OnInit, OnDestroy {
     this.classes.push({ ...this.newClass });
     this.closeAddClassDialog();
     alert('Class added successfully!');
+  }
+
+  setupTeacherClasses(): void {
+    // Reduce the number of classes for teacher view
+    // Only show some classes with teacher's name
+    const teacherName = this.user?.displayName || 'Teacher';
+    
+    // Create a reduced set of classes for teachers
+    this.classes = [
+      // Monday - 2 classes
+      {
+        subject: 'Web Programming',
+        room: 'A101',
+        teacher: teacherName,
+        startTime: '08:00',
+        endTime: '10:00',
+        day: 'Monday',
+        type: 'lecture'
+      },
+      {
+        subject: 'Database Systems',
+        room: 'B205',
+        teacher: teacherName,
+        startTime: '13:00',
+        endTime: '15:00',
+        day: 'Monday',
+        type: 'lab'
+      },
+      // Tuesday - 2 classes
+      {
+        subject: 'AI & Machine Learning',
+        room: 'D401',
+        teacher: teacherName,
+        startTime: '08:00',
+        endTime: '10:00',
+        day: 'Tuesday',
+        type: 'lecture'
+      },
+      {
+        subject: 'Data Structures',
+        room: 'A203',
+        teacher: teacherName,
+        startTime: '14:00',
+        endTime: '16:00',
+        day: 'Tuesday',
+        type: 'lecture'
+      },
+      // Wednesday - 1 class
+      {
+        subject: 'Algorithms',
+        room: 'B402',
+        teacher: teacherName,
+        startTime: '10:00',
+        endTime: '12:00',
+        day: 'Wednesday',
+        type: 'lecture'
+      },
+      // Thursday - 1 class
+      {
+        subject: 'Operating Systems',
+        room: 'A304',
+        teacher: teacherName,
+        startTime: '10:00',
+        endTime: '12:00',
+        day: 'Thursday',
+        type: 'lecture'
+      },
+      // Friday - 1 class
+      {
+        subject: 'Computer Networks Lab',
+        room: 'C301',
+        teacher: teacherName,
+        startTime: '08:00',
+        endTime: '10:00',
+        day: 'Friday',
+        type: 'lab'
+      }
+    ];
   }
 
   getClassesForDay(dayName: string): ClassSchedule[] {

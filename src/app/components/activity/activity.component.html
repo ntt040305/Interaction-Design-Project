@@ -8,7 +8,7 @@
         <p class="page-subtitle">Track and manage your learning activities</p>
     </div>
     <div class="header-actions">
-      <button *ngIf="isTeacher()" mat-raised-button color="primary">
+      <button *ngIf="isTeacher()" mat-raised-button color="primary" (click)="openAddActivityDialog()">
         <mat-icon>add</mat-icon>
         Add Activity
       </button>
@@ -115,7 +115,7 @@
       </div>
       <div class="card-body">
         <div class="timeline">
-    <div class="timeline-item" 
+          <div class="timeline-item" 
   *ngFor="let activity of filteredActivities; let i = index"
                [class]="'timeline-' + activity.type">
             <div class="timeline-marker">
@@ -126,7 +126,12 @@
             <div class="timeline-content">
               <div class="timeline-header">
                 <div class="activity-title">{{ activity.title }}</div>
-                <div class="activity-date">{{ activity.date | date:'dd/MM/yyyy HH:mm' }}</div>
+                <div class="header-right">
+                  <div class="activity-date">{{ activity.date | date:'dd/MM/yyyy HH:mm' }}</div>
+                  <button *ngIf="isTeacher()" mat-icon-button class="delete-btn" (click)="deleteActivity(activity.id)" title="Delete">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
               </div>
               <div class="activity-description">{{ activity.description }}</div>
               <div class="activity-meta">
@@ -202,6 +207,79 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Activity Dialog (Teacher Only) -->
+  <div class="dialog-overlay" *ngIf="showAddDialog && isTeacher()" (click)="closeAddDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Add New Activity</h2>
+        <button mat-icon-button (click)="closeAddDialog()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="dialog-body">
+        <form class="add-activity-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Activity Title</mat-label>
+            <input matInput [(ngModel)]="newActivity.title" name="title" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="newActivity.description" name="description" rows="3" required></textarea>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Subject</mat-label>
+              <input matInput [(ngModel)]="newActivity.subject" name="subject" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Activity Type</mat-label>
+              <mat-select [(ngModel)]="newActivity.type" name="type" required>
+                <mat-option value="class">Class</mat-option>
+                <mat-option value="assignment">Assignment</mat-option>
+                <mat-option value="exam">Exam</mat-option>
+                <mat-option value="project">Project</mat-option>
+                <mat-option value="other">Other</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Status</mat-label>
+              <mat-select [(ngModel)]="newActivity.status" name="status" required>
+                <mat-option value="pending">Pending</mat-option>
+                <mat-option value="in-progress">In Progress</mat-option>
+                <mat-option value="completed">Completed</mat-option>
+                <mat-option value="overdue">Overdue</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Date & Time</mat-label>
+              <input matInput type="datetime-local" [(ngModel)]="newActivity.dateInput" name="date" required>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Priority (Optional)</mat-label>
+            <mat-select [(ngModel)]="newActivity.priority" name="priority">
+              <mat-option value="low">Low</mat-option>
+              <mat-option value="medium">Medium</mat-option>
+              <mat-option value="high">High</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="dialog-actions">
+        <button mat-stroked-button (click)="closeAddDialog()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="addActivity()">Add Activity</button>
       </div>
     </div>
   </div>
