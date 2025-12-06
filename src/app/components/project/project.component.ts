@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { AuthService, AppUser } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 interface ProjectStats {
   completed: number;
@@ -56,12 +62,31 @@ interface ProjectActivity {
 
 @Component({
   selector: 'app-project',
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [
+    CommonModule, 
+    FormsModule,
+    MatButtonModule, 
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
+  ],
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss'
 })
-export class ProjectComponent {
+export class ProjectComponent implements OnInit, OnDestroy {
   currentMonth = 'December, 2024';
+  user: AppUser | null = null;
+  private sub?: Subscription;
+  showAddDialog = false;
+  
+  newProject: any = {
+    title: '',
+    description: '',
+    subject: '',
+    deadline: '',
+    totalTasks: 0
+  };
 
   projectStats: ProjectStats = {
     completed: 8,
@@ -72,41 +97,7 @@ export class ProjectComponent {
     improvement: 5
   };
 
-  currentProjects: Project[] = [
-    {
-      id: '1',
-      title: 'Student Management System',
-      description: 'Develop a web application for managing student information',
-      subject: 'Web Programming',
-      status: 'in-progress',
-      deadline: new Date('2025-01-15'),
-      progress: 75,
-      completedTasks: 15,
-      totalTasks: 20
-    },
-    {
-      id: '2',
-      title: 'Sales Data Analysis',
-      description: 'Use Python and Machine Learning to analyze sales trends',
-      subject: 'AI & Machine Learning',
-      status: 'in-progress',
-      deadline: new Date('2025-01-20'),
-      progress: 60,
-      completedTasks: 12,
-      totalTasks: 20
-    },
-    {
-      id: '3',
-      title: 'LAN Network Design',
-      description: 'Design and implement LAN network for company',
-      subject: 'Computer Networks',
-      status: 'pending',
-      deadline: new Date('2025-02-01'),
-      progress: 0,
-      completedTasks: 0,
-      totalTasks: 15
-    }
-  ];
+  currentProjects: Project[] = [];
 
   projectMilestones: ProjectMilestone[] = [
     {
@@ -223,5 +214,109 @@ export class ProjectComponent {
       const diffInDays = Math.floor(diffInHours / 24);
       return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
     }
+  }
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.sub = this.authService.user$.subscribe(u => this.user = u);
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+
+  isStudent(): boolean {
+    return !!this.user && this.user.role === 'student';
+  }
+
+  openAddProjectDialog() {
+    this.showAddDialog = true;
+    this.newProject = {
+      title: '',
+      description: '',
+      subject: '',
+      deadline: '',
+      totalTasks: 0
+    };
+  }
+
+  closeAddDialog() {
+    this.showAddDialog = false;
+  }
+
+  addProject() {
+    if (!this.newProject.title || !this.newProject.description || !this.newProject.subject || !this.newProject.deadline) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const newId = Date.now().toString();
+    const newProjectItem: Project = {
+      id: newId,
+      title: this.newProject.title,
+      description: this.newProject.description,
+      subject: this.newProject.subject,
+      status: 'pending',
+      deadline: new Date(this.newProject.deadline),
+      progress: 0,
+      completedTasks: 0,
+      totalTasks: parseInt(this.newProject.totalTasks) || 0
+    };
+
+    this.currentProjects.push(newProjectItem);
+    this.updateProjectStats();
+    this.closeAddDialog();
+    alert('Project created successfully!');
+  }
+
+  updateProject(projectId: string) {
+    const project = this.currentProjects.find(p => p.id === projectId);
+    if (project) {
+      const newProgress = prompt('Enter new progress (0-100):', project.progress.toString());
+      if (newProgress !== null) {
+        const progress = parseInt(newProgress);
+        if (progress >= 0 && progress <= 100) {
+          project.progress = progress;
+          project.completedTasks = Math.floor((progress / 100) * project.totalTasks);
+          if (progress === 100) {
+            project.status = 'completed';
+          } else if (progress > 0) {
+            project.status = 'in-progress';
+          }
+          this.updateProjectStats();
+          alert('Project updated successfully!');
+        } else {
+          alert('Progress must be between 0 and 100');
+        }
+      }
+    }
+  }
+
+  finishProject(projectId: string) {
+    const project = this.currentProjects.find(p => p.id === projectId);
+    if (project) {
+      project.status = 'completed';
+      project.progress = 100;
+      project.completedTasks = project.totalTasks;
+      this.updateProjectStats();
+      alert('Project marked as completed!');
+    }
+  }
+
+  deleteProject(projectId: string) {
+    if (confirm('Are you sure you want to delete this project?')) {
+      this.currentProjects = this.currentProjects.filter(p => p.id !== projectId);
+      this.updateProjectStats();
+      alert('Project deleted successfully!');
+    }
+  }
+
+  updateProjectStats() {
+    this.projectStats.completed = this.currentProjects.filter(p => p.status === 'completed').length;
+    this.projectStats.inProgress = this.currentProjects.filter(p => p.status === 'in-progress').length;
+    this.projectStats.pending = this.currentProjects.filter(p => p.status === 'pending').length;
+    const total = this.currentProjects.length;
+    this.projectStats.completionRate = total > 0 ? Math.round((this.projectStats.completed / total) * 100) : 0;
   }
 }

@@ -8,7 +8,7 @@
       <p class="page-subtitle">Track and manage your academic projects</p>
     </div>
     <div class="header-actions">
-      <button mat-raised-button color="primary">
+      <button *ngIf="isStudent()" mat-raised-button color="primary" (click)="openAddProjectDialog()">
         <mat-icon>add</mat-icon>
         Create New Project
       </button>
@@ -100,9 +100,12 @@
                 <span class="completed-tasks">{{ project.completedTasks }}/{{ project.totalTasks }} tasks</span>
               </div>
             </div>
-            <div class="project-actions">
-              <button mat-stroked-button>Details</button>
-              <button mat-raised-button color="primary">Update</button>
+            <div class="project-actions" *ngIf="isStudent()">
+              <button mat-stroked-button (click)="updateProject(project.id)">Update</button>
+              <button mat-raised-button color="primary" (click)="finishProject(project.id)" *ngIf="project.status !== 'completed'">Finish</button>
+              <button mat-icon-button color="warn" (click)="deleteProject(project.id)" title="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
             </div>
           </div>
         </div>
@@ -225,6 +228,52 @@
             <div class="activity-project">{{ activity.project }}</div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Project Dialog (Student Only) -->
+  <div class="dialog-overlay" *ngIf="showAddDialog && isStudent()" (click)="closeAddDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Create New Project</h2>
+        <button mat-icon-button (click)="closeAddDialog()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="dialog-body">
+        <form class="project-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Project Title</mat-label>
+            <input matInput [(ngModel)]="newProject.title" name="title" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="newProject.description" name="description" rows="3" required></textarea>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Subject</mat-label>
+              <input matInput [(ngModel)]="newProject.subject" name="subject" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Deadline</mat-label>
+              <input matInput type="date" [(ngModel)]="newProject.deadline" name="deadline" required>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Total Tasks (Optional)</mat-label>
+            <input matInput type="number" [(ngModel)]="newProject.totalTasks" name="totalTasks" min="0">
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="dialog-actions">
+        <button mat-stroked-button (click)="closeAddDialog()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="addProject()">Create Project</button>
       </div>
     </div>
   </div>

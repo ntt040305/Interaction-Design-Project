@@ -8,7 +8,7 @@
         <p class="page-subtitle">Track and analyze your attendance rate</p>
     </div>
     <div class="header-actions">
-      <button mat-raised-button color="primary">
+      <button *ngIf="isStudent()" mat-raised-button color="primary" (click)="openLeaveDialog()">
         <mat-icon>event_available</mat-icon>
         Request Leave
       </button>
@@ -238,6 +238,86 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leave Requests Section (Student Only) -->
+  <div class="leave-requests" *ngIf="isStudent() && leaveRequests.length > 0">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="icon">
+            <span class="material-symbols-outlined">event_available</span>
+          </span>
+          My Leave Requests
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="leave-list">
+          <div class="leave-item" *ngFor="let request of leaveRequests">
+            <div class="leave-info">
+              <div class="leave-subject">{{ request.subject }}</div>
+              <div class="leave-time">Class: {{ request.classTime }}</div>
+              <div class="leave-date">Date: {{ request.date | date:'dd/MM/yyyy' }}</div>
+              <div class="leave-duration">Leave: {{ request.leaveStartTime }} - {{ request.leaveEndTime }}</div>
+            </div>
+            <div class="leave-status" [class]="'status-' + request.status">
+              {{ getLeaveStatusText(request.status) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Leave Dialog (Student Only) -->
+  <div class="dialog-overlay" *ngIf="showLeaveDialog && isStudent()" (click)="closeLeaveDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Request Leave</h2>
+        <button mat-icon-button (click)="closeLeaveDialog()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="dialog-body">
+        <form class="leave-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Select Class</mat-label>
+            <mat-select [(ngModel)]="newLeaveRequest.subject" name="subject" required>
+              <mat-option *ngFor="let classItem of todayClasses" [value]="classItem.subject">
+                {{ classItem.subject }} ({{ classItem.time }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Class Time</mat-label>
+            <input matInput [(ngModel)]="newLeaveRequest.classTime" name="classTime" 
+                   placeholder="e.g., 08:00 - 10:00" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Date</mat-label>
+            <input matInput type="date" [(ngModel)]="newLeaveRequest.date" name="date" required>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Leave Start Time</mat-label>
+              <input matInput type="time" [(ngModel)]="newLeaveRequest.leaveStartTime" name="leaveStartTime" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Leave End Time</mat-label>
+              <input matInput type="time" [(ngModel)]="newLeaveRequest.leaveEndTime" name="leaveEndTime" required>
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+      <div class="dialog-actions">
+        <button mat-stroked-button (click)="closeLeaveDialog()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="submitLeaveRequest()">Submit Request</button>
       </div>
     </div>
   </div>
